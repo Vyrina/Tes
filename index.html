@@ -31,7 +31,12 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; overflow-x: hidden; scroll-behavior: smooth; }
+    html, body { 
+      height: 100%; 
+      overflow-x: hidden; 
+      scroll-behavior: smooth; 
+      background-color: var(--bg-2); /* Menambahkan background untuk menghindari garis putih */
+    }
 
     body {
       background:
@@ -328,7 +333,7 @@
       .title h1 { font-size: 16px; }
       .logo { width: 48px; height: 48px; font-size: 16px; }
       header { padding: 10px; }
-      body { padding: 18px 12px 28px; /* Tambahkan padding bottom untuk garis putih */}
+      body { padding: 18px 12px; }
       .project-actions { flex-direction: row; height: 0; }
       .project:hover .project-actions { height: 32px; }
       .action-btn { padding: 8px; }
@@ -647,8 +652,8 @@
     // ---------- Modern, performant background (Canvas) ----------
     (function backgroundSystem(){
       const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const isMobile = window.innerWidth <= 768;
       const DPR = Math.min(window.devicePixelRatio || 1, 2);
-      const isMobile = window.innerWidth < 768;
 
       // Stars Canvas
       const starCanvas = document.getElementById('bg-stars');
@@ -679,9 +684,10 @@
       resizeCanvas();
 
       // --------- Aurora Orbs (very lightweight) ---------
+      // Mengurangi jumlah orbs untuk perangkat mobile
+      const ORB_COUNT = isMobile ? 3 : W > 1200 ? 5 : 4;
+      const orbs = [];
       function initOrbs(){
-        // Reduce orbs on mobile
-        const ORB_COUNT = isMobile ? 4 : (W > 1200 ? 8 : W > 768 ? 6 : 5);
         orbs.length = 0;
         for(let i=0;i<ORB_COUNT;i++){
           const r = Math.random()*160 + 120; // big glow
@@ -693,12 +699,11 @@
             r,
             hue,
             alpha: 0.08 + Math.random()*0.08,
-            vx: prefersReduced ? 0 : (Math.random()*0.3 - 0.15),
+            vx: prefersReduced ? 0 : (Math.random()*0.3 - 0.15), // Hentikan animasi jika preferensi pengurangan gerakan
             vy: prefersReduced ? 0 : (Math.random()*0.3 - 0.15)
           });
         }
       }
-      const orbs = [];
       initOrbs();
 
       function drawOrbs(){
@@ -713,22 +718,25 @@
           orbCtx.arc(o.x, o.y, o.r, 0, Math.PI*2);
           orbCtx.fill();
 
-          o.x += o.vx; o.y += o.vy;
-          if(o.x < -o.r) o.x = W + o.r;
-          if(o.x > W + o.r) o.x = -o.r;
-          if(o.y < -o.r) o.y = H + o.r;
-          if(o.y > H + o.r) o.y = -o.r;
+          // Hentikan animasi jika preferensi pengurangan gerakan
+          if (!prefersReduced) {
+            o.x += o.vx; o.y += o.vy;
+            if(o.x < -o.r) o.x = W + o.r;
+            if(o.x > W + o.r) o.x = -o.r;
+            if(o.y < -o.r) o.y = H + o.r;
+            if(o.y > H + o.r) o.y = -o.r;
+          }
         }
         orbCtx.globalCompositeOperation = 'source-over';
       }
 
       // --------- Stars (constellation-lite, parallax) ---------
+      // Mengurangi jumlah bintang untuk perangkat mobile
+      const BASE_STARS = isMobile ? 40 : W > 1400 ? 100 : W > 1024 ? 80 : 60;
       const stars = [];
       let parallax = { x: 0, y: 0 }, targetParallax = { x: 0, y: 0 };
 
       function initStars(){
-        // Reduce stars on mobile
-        const BASE_STARS = isMobile ? 60 : (W > 1400 ? 140 : W > 1024 ? 110 : W > 640 ? 90 : 70);
         stars.length = 0;
         for(let i=0;i<BASE_STARS;i++){
           stars.push({
@@ -736,7 +744,7 @@
             y: Math.random()*H,
             r: Math.random()*1.2 + 0.6,
             depth: Math.random()*0.7 + 0.3, // 0.3..1
-            twinkle: Math.random()*1.2 + 0.6,
+            twinkle: prefersReduced ? 0 : Math.random()*1.2 + 0.6, // Hentikan animasi jika preferensi pengurangan gerakan
             phase: Math.random()*Math.PI*2
           });
         }
@@ -752,7 +760,7 @@
 
         // Draw stars
         for(const s of stars){
-          const tw = prefersReduced ? 1 : (0.65 + 0.35 * Math.sin((time*0.001*s.twinkle) + s.phase));
+          const tw = prefersReduced ? 1 : 0.65 + 0.35 * Math.sin((time*0.001*s.twinkle) + s.phase);
           const alpha = 0.5 * s.depth * tw + 0.15;
 
           const px = s.x + parallax.x * (1.5 - s.depth);
@@ -765,17 +773,14 @@
           starCtx.fill();
         }
 
-        // Skip constellation links on mobile and reduced motion
-        if(prefersReduced || isMobile) {
-          starCtx.globalAlpha = 1;
-          return;
-        }
+        // Skip constellation links if reduced motion
+        if (prefersReduced) return;
 
         // A few minimal "constellation" links per frame (random subset, O(n))
         starCtx.globalAlpha = 0.06;
         starCtx.strokeStyle = 'rgba(160, 200, 255, 0.5)';
         starCtx.lineWidth = 1;
-        const tries = 10; // low to keep perf
+        const tries = isMobile ? 5 : 10; // Lebih sedikit di mobile
         for(let i=0;i<tries;i++){
           const a = stars[(Math.random()*stars.length)|0];
           const b = stars[(Math.random()*stars.length)|0];
@@ -791,8 +796,8 @@
         starCtx.globalAlpha = 1;
       }
 
-      // Cursor parallax (very light) - disable on mobile
-      if(!isMobile) {
+      // Cursor parallax (very light) - hanya jika tidak preferensi pengurangan gerakan
+      if (!prefersReduced) {
         window.addEventListener('pointermove', (e) => {
           const cx = W/2, cy = H/2;
           const dx = (e.clientX - cx) / cx;
@@ -1004,4 +1009,4 @@
     })();
   </script>
 </body>
-  </html>
+</html>
