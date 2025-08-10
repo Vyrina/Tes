@@ -31,22 +31,18 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { 
-      height: 100%; 
-      overflow-x: hidden; 
-      scroll-behavior: smooth; 
-    }
+    html, body { height: 100%; overflow-x: hidden; scroll-behavior: smooth; }
 
     body {
       background:
         radial-gradient(800px 600px at 15% 10%, rgba(96,165,250,0.08), transparent 35%),
         radial-gradient(700px 500px at 85% 90%, rgba(110,231,183,0.05), transparent 35%),
         linear-gradient(180deg, var(--bg), var(--bg-2));
-      background-color: var(--bg-2); /* Fallback untuk mengatasi garis putih */
       color: #E6EEF8;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       line-height: 1.45;
+      padding: 28px 18px;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
@@ -58,23 +54,20 @@
     /* Modern, performant background layers (canvas) */
     #bg-orbs, #bg-stars {
       position: fixed;
-      top: 0;
-      left: 0;
+      inset: 0;
       width: 100%;
       height: 100%;
       pointer-events: none;
-      z-index: -2;
+      background-color: #0f1724;
     }
-    #bg-stars { z-index: -1; }
+    #bg-orbs { z-index: 0; }
+    #bg-stars { z-index: 1; }
 
     /* Subtle aurora sheen (GPU-friendly) */
     .aurora {
       position: fixed;
-      top: -10%;
-      left: -10%;
-      right: -10%;
-      bottom: -10%;
-      z-index: -3;
+      inset: -10%;
+      z-index: 0;
       pointer-events: none;
       background:
         radial-gradient(60% 35% at 70% 15%, rgba(96,165,250,0.10), transparent 60%),
@@ -83,13 +76,6 @@
       filter: blur(28px) saturate(120%);
       opacity: 0.7;
     }
-    
-    @media (max-width: 768px) {
-      .aurora {
-        filter: blur(20px) saturate(120%); /* Mengurangi blur di mobile */
-      }
-    }
-    
     @media (prefers-reduced-motion: no-preference) {
       .aurora {
         animation: auroraShift 22s ease-in-out infinite alternate;
@@ -109,9 +95,7 @@
       display: grid;
       grid-template-columns: 1fr;
       gap: 22px;
-      margin: 0 auto;
-      padding: 28px 18px;
-      flex: 1; /* Mengisi ruang tersisa */
+      margin: auto;
     }
 
     header {
@@ -345,7 +329,7 @@
       .title h1 { font-size: 16px; }
       .logo { width: 48px; height: 48px; font-size: 16px; }
       header { padding: 10px; }
-      .wrap { padding: 18px 12px; } /* Padding khusus mobile */
+      body { padding: 18px 12px; }
       .project-actions { flex-direction: row; height: 0; }
       .project:hover .project-actions { height: 32px; }
       .action-btn { padding: 8px; }
@@ -691,24 +675,14 @@
         orbCtx.setTransform(1,0,0,1,0,0);
         orbCtx.scale(DPR, DPR);
       }
-      
-      // Optimasi jumlah orbs dan bintang untuk mobile
-      function getOrbCount() {
-        return W > 1200 ? 8 : W > 768 ? 6 : W > 480 ? 4 : 3;
-      }
-      
-      function getStarCount() {
-        return W > 1400 ? 140 : W > 1024 ? 110 : W > 768 ? 90 : W > 480 ? 70 : 50;
-      }
-
       window.addEventListener('resize', resizeCanvas, { passive: true });
       resizeCanvas();
 
       // --------- Aurora Orbs (very lightweight) ---------
-      let orbs = [];
+      const ORB_COUNT = (W > 1200 ? 8 : W > 768 ? 6 : 5);
+      const orbs = [];
       function initOrbs(){
-        const ORB_COUNT = getOrbCount();
-        orbs = [];
+        orbs.length = 0;
         for(let i=0;i<ORB_COUNT;i++){
           const r = Math.random()*160 + 120; // big glow
           const hueChoices = [160, 200, 260, 320]; // mint, blue, indigo, magenta accents
@@ -748,12 +722,12 @@
       }
 
       // --------- Stars (constellation-lite, parallax) ---------
-      let stars = [];
+      const BASE_STARS = (W > 1400 ? 140 : W > 1024 ? 110 : W > 640 ? 90 : 70);
+      const stars = [];
       let parallax = { x: 0, y: 0 }, targetParallax = { x: 0, y: 0 };
 
       function initStars(){
-        const BASE_STARS = getStarCount();
-        stars = [];
+        stars.length = 0;
         for(let i=0;i<BASE_STARS;i++){
           stars.push({
             x: Math.random()*W,
@@ -849,13 +823,6 @@
       document.addEventListener('visibilitychange', () => {
         if(document.hidden) stop(); else start();
       });
-
-      // Re-init on resize
-      window.addEventListener('resize', () => {
-        resizeCanvas();
-        initOrbs();
-        initStars();
-      }, { passive: true });
 
       start();
     })();
@@ -1027,4 +994,4 @@
     })();
   </script>
 </body>
-                                                             </html>
+</html>
