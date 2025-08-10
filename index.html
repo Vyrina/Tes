@@ -7,7 +7,7 @@
   <meta name="description" content="Portfolio Vyr Lix — developer & designer.">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
+
   <style>
     /* ========== Reset & base ========== */
     :root {
@@ -31,18 +31,22 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; overflow-x: hidden; scroll-behavior: smooth; }
+    html, body { 
+      height: 100%; 
+      overflow-x: hidden; 
+      scroll-behavior: smooth; 
+    }
 
     body {
       background:
         radial-gradient(800px 600px at 15% 10%, rgba(96,165,250,0.08), transparent 35%),
         radial-gradient(700px 500px at 85% 90%, rgba(110,231,183,0.05), transparent 35%),
         linear-gradient(180deg, var(--bg), var(--bg-2));
+      background-color: var(--bg-2); /* Fallback untuk mengatasi garis putih */
       color: #E6EEF8;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       line-height: 1.45;
-      padding: 28px 18px;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
@@ -54,18 +58,23 @@
     /* Modern, performant background layers (canvas) */
     #bg-orbs, #bg-stars {
       position: fixed;
-      inset: 0;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
       pointer-events: none;
-      z-index: 0;
+      z-index: -2;
     }
+    #bg-stars { z-index: -1; }
 
     /* Subtle aurora sheen (GPU-friendly) */
     .aurora {
       position: fixed;
-      inset: -10%;
-      z-index: 0;
+      top: -10%;
+      left: -10%;
+      right: -10%;
+      bottom: -10%;
+      z-index: -3;
       pointer-events: none;
       background:
         radial-gradient(60% 35% at 70% 15%, rgba(96,165,250,0.10), transparent 60%),
@@ -75,6 +84,22 @@
       opacity: 0.7;
     }
     
+    @media (max-width: 768px) {
+      .aurora {
+        filter: blur(20px) saturate(120%); /* Mengurangi blur di mobile */
+      }
+    }
+    
+    @media (prefers-reduced-motion: no-preference) {
+      .aurora {
+        animation: auroraShift 22s ease-in-out infinite alternate;
+      }
+      @keyframes auroraShift {
+        0% { transform: translate3d(0,0,0) scale(1); opacity: 0.65; }
+        100% { transform: translate3d(0,-2%,0) scale(1.05); opacity: 0.8; }
+      }
+    }
+
     /* ========== Layout ========== */
     .wrap {
       position: relative;
@@ -84,7 +109,9 @@
       display: grid;
       grid-template-columns: 1fr;
       gap: 22px;
-      margin: auto;
+      margin: 0 auto;
+      padding: 28px 18px;
+      flex: 1; /* Mengisi ruang tersisa */
     }
 
     header {
@@ -120,7 +147,13 @@
       position: relative;
       overflow: hidden;
     }
-    
+    .logo::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+      animation: shine 4s infinite;
+    }
+
     .title { display: flex; flex-direction: column; line-height: 1; }
     .title h1 { font-size: 18px; letter-spacing: 0.2px; margin-bottom: 3px; }
     .title p { font-size: 12px; color: var(--muted); }
@@ -167,6 +200,11 @@
       border: 1px solid rgba(125, 211, 252, 0.08);
       animation: float 4s ease-in-out infinite;
       position: relative; overflow: hidden;
+    }
+    .avatar::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(45deg, transparent, rgba(125, 211, 252, 0.1), transparent);
+      animation: shine 4s infinite;
     }
 
     .bio { flex: 1; }
@@ -226,7 +264,13 @@
       transition: all 0.3s ease; position: relative; overflow: hidden; z-index: 1;
       display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; text-align: center;
     }
+    .btn::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(90deg, #60a5fa, #6ee7b7);
+      z-index: -1; opacity: 0; transition: opacity 0.3s ease;
+    }
     .btn:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(96, 165, 250, 0.2); }
+    .btn:hover::after { opacity: 1; }
     .btn.secondary { background: transparent; color: var(--muted); border: 1px solid var(--glass-border); }
     .btn.secondary:hover { background: rgba(255, 255, 255, 0.05); color: #fff; border-color: var(--primary); }
 
@@ -275,7 +319,13 @@
       padding: 8px 10px; border-radius: 10px; background: var(--glass-2);
       font-weight: 600; font-size: 13px; color: var(--muted); transition: all 0.3s ease; position: relative; overflow: hidden; display: flex; align-items: center; gap: 8px;
     }
+    .skill::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(90deg, rgba(96, 165, 250, 0.2), rgba(110, 231, 183, 0.2));
+      z-index: -1; transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease;
+    }
     .skill:hover { color: #fff; transform: translateY(-3px); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); }
+    .skill:hover::before { transform: scaleX(1); }
 
     /* Sidebar section */
     .sidebar-section { padding-left: 12px; }
@@ -295,7 +345,7 @@
       .title h1 { font-size: 16px; }
       .logo { width: 48px; height: 48px; font-size: 16px; }
       header { padding: 10px; }
-      body { padding: 18px 12px; }
+      .wrap { padding: 18px 12px; } /* Padding khusus mobile */
       .project-actions { flex-direction: row; height: 0; }
       .project:hover .project-actions { height: 32px; }
       .action-btn { padding: 8px; }
@@ -326,6 +376,10 @@
     @keyframes slideInRight {
       from { opacity: 0; transform: translateX(30px); }
       to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes shine {
+      0% { transform: translateX(-150%); }
+      50%,100% { transform: translateX(150%); }
     }
     @keyframes projectRise {
       0% { transform: translateY(0); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
@@ -611,7 +665,6 @@
     (function backgroundSystem(){
       const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const DPR = Math.min(window.devicePixelRatio || 1, 2);
-      const isMobile = /Mobi|Android/i.test(navigator.userAgent);
 
       // Stars Canvas
       const starCanvas = document.getElementById('bg-stars');
@@ -638,16 +691,26 @@
         orbCtx.setTransform(1,0,0,1,0,0);
         orbCtx.scale(DPR, DPR);
       }
+      
+      // Optimasi jumlah orbs dan bintang untuk mobile
+      function getOrbCount() {
+        return W > 1200 ? 8 : W > 768 ? 6 : W > 480 ? 4 : 3;
+      }
+      
+      function getStarCount() {
+        return W > 1400 ? 140 : W > 1024 ? 110 : W > 768 ? 90 : W > 480 ? 70 : 50;
+      }
+
       window.addEventListener('resize', resizeCanvas, { passive: true });
       resizeCanvas();
 
-      // --------- Aurora Orbs (optimized) ---------
-      const ORB_COUNT = isMobile ? 3 : 5; // Reduced from 8 to 5
-      const orbs = [];
+      // --------- Aurora Orbs (very lightweight) ---------
+      let orbs = [];
       function initOrbs(){
-        orbs.length = 0;
+        const ORB_COUNT = getOrbCount();
+        orbs = [];
         for(let i=0;i<ORB_COUNT;i++){
-          const r = Math.random()*100 + 80; // Reduced size
+          const r = Math.random()*160 + 120; // big glow
           const hueChoices = [160, 200, 260, 320]; // mint, blue, indigo, magenta accents
           const hue = hueChoices[Math.floor(Math.random()*hueChoices.length)];
           orbs.push({
@@ -655,9 +718,9 @@
             y: Math.random()*H,
             r,
             hue,
-            alpha: 0.06 + Math.random()*0.06, // Reduced alpha
-            vx: (Math.random()*0.15 - 0.075), // Reduced speed
-            vy: (Math.random()*0.15 - 0.075)  // Reduced speed
+            alpha: 0.08 + Math.random()*0.08,
+            vx: (Math.random()*0.3 - 0.15),
+            vy: (Math.random()*0.3 - 0.15)
           });
         }
       }
@@ -684,18 +747,18 @@
         orbCtx.globalCompositeOperation = 'source-over';
       }
 
-      // --------- Stars (optimized) ---------
-      const BASE_STARS = isMobile ? 80 : 100; // Reduced from 140 to 100
-      const stars = [];
+      // --------- Stars (constellation-lite, parallax) ---------
+      let stars = [];
       let parallax = { x: 0, y: 0 }, targetParallax = { x: 0, y: 0 };
 
       function initStars(){
-        stars.length = 0;
+        const BASE_STARS = getStarCount();
+        stars = [];
         for(let i=0;i<BASE_STARS;i++){
           stars.push({
             x: Math.random()*W,
             y: Math.random()*H,
-            r: Math.random()*1.0 + 0.5, // Reduced size
+            r: Math.random()*1.2 + 0.6,
             depth: Math.random()*0.7 + 0.3, // 0.3..1
             twinkle: Math.random()*1.2 + 0.6,
             phase: Math.random()*Math.PI*2
@@ -726,11 +789,11 @@
           starCtx.fill();
         }
 
-        // Reduced constellation lines
+        // A few minimal "constellation" links per frame (random subset, O(n))
         starCtx.globalAlpha = 0.06;
         starCtx.strokeStyle = 'rgba(160, 200, 255, 0.5)';
         starCtx.lineWidth = 1;
-        const tries = 5; // Reduced from 10 to 5
+        const tries = 10; // low to keep perf
         for(let i=0;i<tries;i++){
           const a = stars[(Math.random()*stars.length)|0];
           const b = stars[(Math.random()*stars.length)|0];
@@ -746,34 +809,22 @@
         starCtx.globalAlpha = 1;
       }
 
-      // Cursor parallax (lightweight)
+      // Cursor parallax (very light)
       window.addEventListener('pointermove', (e) => {
         const cx = W/2, cy = H/2;
         const dx = (e.clientX - cx) / cx;
         const dy = (e.clientY - cy) / cy;
-        targetParallax.x = dx * 8; // Reduced from 10 to 8
-        targetParallax.y = dy * 8; // Reduced from 10 to 8
+        targetParallax.x = dx * 10; // small offset
+        targetParallax.y = dy * 10;
       }, { passive: true });
 
-      // Animation loop with fixed time step
+      // Animation loop (pause when hidden)
       let rafId = null;
       let running = !prefersReduced;
-      let lastTime = 0;
-      const frameRate = 30; // Target 30fps instead of 60fps
-      const frameDelay = 1000 / frameRate;
-      
-      function frame(timestamp) {
-        if (!running) return;
-        
-        if (!lastTime) lastTime = timestamp;
-        const elapsed = timestamp - lastTime;
-        
-        if (elapsed > frameDelay) {
-          drawOrbs();
-          drawStars(timestamp);
-          lastTime = timestamp - (elapsed % frameDelay);
-        }
-        
+      function frame(t){
+        if(!running) return;
+        drawOrbs();
+        drawStars(t);
         rafId = requestAnimationFrame(frame);
       }
 
@@ -793,12 +844,18 @@
         running = false;
         if(rafId != null) cancelAnimationFrame(rafId);
         rafId = null;
-        lastTime = 0;
       }
 
       document.addEventListener('visibilitychange', () => {
         if(document.hidden) stop(); else start();
       });
+
+      // Re-init on resize
+      window.addEventListener('resize', () => {
+        resizeCanvas();
+        initOrbs();
+        initStars();
+      }, { passive: true });
 
       start();
     })();
@@ -970,4 +1027,4 @@
     })();
   </script>
 </body>
-              </html>
+                                                             </html>
