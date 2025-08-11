@@ -35,7 +35,7 @@
       height: 100%; 
       overflow-x: hidden; 
       scroll-behavior: smooth; 
-      background-color: var(--bg-2); /* Menambahkan background untuk menghindari garis putih */
+      background-color: var(--bg-2);
     }
 
     body {
@@ -93,7 +93,7 @@
     /* ========== Layout ========== */
     .wrap {
       position: relative;
-      z-index: 2; /* above background canvases and aurora */
+      z-index: 2;
       width: 100%;
       max-width: var(--maxw);
       display: grid;
@@ -270,14 +270,15 @@
       border: 1px solid var(--glass-border);
       display: flex; flex-direction: column; gap: 10px; position: relative; overflow: hidden; cursor: pointer;
       transform-origin: center; min-height: 220px;
-      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
-                 box-shadow 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
-                 border-color 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      
+      /* PERBAIKAN: Transisi dipindahkan ke sini */
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     .project:hover {
-      transform: translateY(-8px);
+      transform: translateY(-8px) scale(1.02);
       box-shadow: 0 12px 30px rgba(2, 6, 23, 0.8);
       border-color: rgba(96, 165, 250, 0.3);
+      /* Hapus animasi projectRise */
     }
     .project-content { display: flex; flex-direction: column; gap: 10px; position: relative; z-index: 1; }
     .project-icon {
@@ -370,7 +371,8 @@
       0% { transform: translateX(-150%); }
       50%,100% { transform: translateX(150%); }
     }
-
+    /* Hapus animasi projectRise */
+    
     /* ===== TEXT ANIMATION FIX ===== */
     .text-animate { opacity: 0; transition: all 0.6s ease; }
     .fade-in { opacity: 0; transform: translateY(20px); }
@@ -441,6 +443,229 @@
     }
     .gradient-reveal.visible { animation: gradientReveal 1.2s ease-out forwards, fadeIn 0.6s forwards; }
     @keyframes gradientReveal { 0%{ background-size: 0% 100%; } 100%{ background-size: 100% 100%; } }
+    
+/* ========== BOTTOM NAVIGATION ========== */
+.nav-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  padding: 0 16px 16px;
+  pointer-events: none;
+}
+
+.nav-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 500px;
+}
+
+/* Tombol plus */
+.nav-toggle {
+  position: absolute;
+  bottom: -8px;
+  right: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1002;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  pointer-events: auto;
+}
+
+.nav-toggle i {
+  font-size: 20px;
+  color: #041024;
+  transition: transform 0.3s ease;
+}
+
+.nav-toggle.active i {
+  transform: rotate(45deg);
+}
+
+/* Kotak navbar */
+.nav-bar {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: var(--card);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 30px rgba(2, 6, 23, 0.8);
+
+  /* Awal: hanya setinggi nav-links */
+  max-height: 90px;
+  opacity: 0;
+  transform: translateY(100%);
+  pointer-events: none;
+
+  /* Transisi smooth buka-tutup */
+  transition:
+    max-height 0.4s ease,
+    padding 0.4s ease,
+    opacity 0.4s ease,
+    transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  overflow: hidden;
+  z-index: 1001;
+}
+
+/* Saat navbar dibuka */
+.nav-bar.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Kontainer link utama */
+.nav-links {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 16px;
+  gap: 8px;
+}
+
+/* Link utama */
+.nav-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: var(--muted);
+  padding: 10px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  transform: translateY(-3px);
+}
+
+.nav-link i {
+  font-size: 18px;
+  margin-bottom: 4px;
+  transition: transform 0.3s ease;
+}
+
+.nav-link:hover i {
+  transform: scale(1.1);
+}
+
+.nav-link span {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Menu tambahan (hidden awal) */
+.nav-expanded {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 0 16px;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition:
+    opacity 0.4s ease,
+    max-height 0.4s ease,
+    padding 0.4s ease;
+}
+
+/* Saat expanded aktif */
+.nav-bar.expanded {
+  max-height: 280px; /* cukup untuk nav-links + expanded */
+}
+
+.nav-bar.active.expanded .nav-expanded {
+  opacity: 1;
+  max-height: 200px;
+  padding: 16px;
+}
+
+/* Item di expanded */
+.expanded-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--muted);
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--glass);
+  transition: all 0.3s ease;
+  transform: translateY(10px);
+  opacity: 0;
+}
+
+.expanded-link:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.expanded-link i {
+  font-size: 14px;
+}
+
+.expanded-link span {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Animasi per item */
+.nav-bar.active.expanded .expanded-link {
+  transform: translateY(0);
+  opacity: 1;
+}
+.nav-bar.active.expanded .expanded-link:nth-child(1) { transition-delay: 0.1s; }
+.nav-bar.active.expanded .expanded-link:nth-child(2) { transition-delay: 0.15s; }
+.nav-bar.active.expanded .expanded-link:nth-child(3) { transition-delay: 0.2s; }
+.nav-bar.active.expanded .expanded-link:nth-child(4) { transition-delay: 0.25s; }
+.nav-bar.active.expanded .expanded-link:nth-child(5) { transition-delay: 0.3s; }
+.nav-bar.active.expanded .expanded-link:nth-child(6) { transition-delay: 0.35s; }
+
+/* Efek pada tombol More saat aktif */
+.nav-link.more.active {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+}
+
+.nav-link.more.active i {
+  transform: rotate(45deg);
+  color: var(--primary);
+}
+
+/* Responsif */
+@media (max-width: 480px) {
+  .nav-links {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .nav-expanded {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .nav-toggle {
+    bottom: -16px;
+    width: 56px;
+    height: 56px;
+  }
+}
+
   </style>
 </head>
 <body>
@@ -643,6 +868,62 @@
         </div>
       </section>
     </main>
+  </div>
+  
+  <!-- Bottom Navigation -->
+  <div class="nav-container">
+    <div class="nav-wrapper">
+      <div class="nav-toggle" id="navToggle">
+        <i class="fas fa-plus"></i>
+      </div>
+      <div class="nav-bar" id="navBar">
+        <div class="nav-links">
+          <a href="#" class="nav-link">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+          </a>
+          <a href="#projects" class="nav-link">
+            <i class="fas fa-folder"></i>
+            <span>Projects</span>
+          </a>
+          <a href="#contact" class="nav-link">
+            <i class="fas fa-envelope"></i>
+            <span>Contact</span>
+          </a>
+          <!-- Ubah About menjadi More -->
+          <a href="#about" class="nav-link more" id="navMore">
+            <i class="fas fa-ellipsis-h"></i>
+            <span>More</span>
+          </a>
+        </div>
+        <div class="nav-expanded">
+          <a href="#" class="expanded-link">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+          </a>
+          <a href="#" class="expanded-link">
+            <i class="fas fa-download"></i>
+            <span>Download</span>
+          </a>
+          <a href="#" class="expanded-link">
+            <i class="fas fa-share-alt"></i>
+            <span>Share</span>
+          </a>
+          <a href="#" class="expanded-link">
+            <i class="fas fa-bookmark"></i>
+            <span>Bookmarks</span>
+          </a>
+          <a href="#" class="expanded-link">
+            <i class="fas fa-history"></i>
+            <span>History</span>
+          </a>
+          <a href="#" class="expanded-link">
+            <i class="fas fa-star"></i>
+            <span>Favorites</span>
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -925,6 +1206,9 @@
     const CTA_BTN = $('#cta-btn');
     const CONTACT_BTN = $('#contact-btn');
     const HIRE_BTN = $('#hire-btn');
+    const navToggle = document.getElementById('navToggle');
+    const navBar = document.getElementById('navBar');
+    const navMore = document.getElementById('navMore');
 
     // ---------- Language logic ----------
     function detectLang(){
@@ -999,6 +1283,69 @@
       }
     });
 
+    // Bottom Nav Toggle
+    navToggle.addEventListener('click', () => {
+      navToggle.classList.toggle('active');
+      navBar.classList.toggle('active');
+      
+      // Animate the toggle button
+      if (navToggle.classList.contains('active')) {
+        navToggle.style.transform = 'translateY(-10px)';
+      } else {
+        navToggle.style.transform = 'translateY(0)';
+      }
+      
+      // Reset More menu when closing
+      if (!navBar.classList.contains('active')) {
+        navBar.classList.remove('expanded');
+        resetMoreIcon();
+      }
+    });
+
+    // Close navbar when clicking outside
+    document.addEventListener('click', (e) => {
+      if (navBar.classList.contains('active') && 
+          !navBar.contains(e.target) && 
+          !navToggle.contains(e.target)) {
+        navToggle.classList.remove('active');
+        navBar.classList.remove('active');
+        navBar.classList.remove('expanded');
+        navToggle.style.transform = 'translateY(0)';
+        resetMoreIcon();
+      }
+    });
+
+    // More menu toggle
+    navMore.addEventListener('click', (e) => {
+      e.preventDefault();
+      
+      // Open navbar if it's closed
+      if (!navBar.classList.contains('active')) {
+        navBar.classList.add('active');
+        navToggle.classList.add('active');
+        navToggle.style.transform = 'translateY(-10px)';
+      }
+      
+      // Toggle expanded state
+      navBar.classList.toggle('expanded');
+      
+      // Update icon
+      const icon = navMore.querySelector('i');
+      if (navBar.classList.contains('expanded')) {
+        icon.className = 'fas fa-times';
+        navMore.classList.add('active');
+      } else {
+        icon.className = 'fas fa-ellipsis-h';
+        navMore.classList.remove('active');
+      }
+    });
+    
+    function resetMoreIcon() {
+      const icon = navMore.querySelector('i');
+      icon.className = 'fas fa-ellipsis-h';
+      navMore.classList.remove('active');
+    }
+
     // initialize
     (function init(){
       const initial = detectLang();
@@ -1006,4 +1353,4 @@
     })();
   </script>
 </body>
-                      </html>
+</html>
