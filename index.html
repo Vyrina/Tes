@@ -7,7 +7,7 @@
   <meta name="description" content="Portfolio Vyr Lix — developer & designer.">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+  
   <style>
     /* ========== Reset & base ========== */
     :root {
@@ -30,6 +30,32 @@
       color-scheme: dark;
     }
 
+    /* THEME STYLES */
+    .theme-aurora .aurora { display: block; }
+    .theme-aurora #bg-orbs { display: block; }
+    .theme-aurora #bg-stars { display: block; }
+    .theme-particles .aurora { display: none; }
+    .theme-particles #bg-orbs { display: block; }
+    .theme-particles #bg-stars { display: none; }
+    .theme-gradient .aurora { display: none; }
+    .theme-gradient #bg-orbs { display: none; }
+    .theme-gradient #bg-stars { display: none; }
+
+    /* Theme-specific background gradients */
+    .theme-gradient body {
+      background: linear-gradient(135deg, #1d2538, #0e121a);
+    }
+    
+    .theme-particles body {
+      background: linear-gradient(180deg, var(--bg), var(--bg-2));
+    }
+    .theme-aurora body {
+       background: radial-gradient(800px 600px at 15% 10%, rgba(96,165,250,0.08), transparent 35%),
+        radial-gradient(700px 500px at 85% 90%, rgba(110,231,183,0.05), transparent 35%),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
+    }
+
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { 
       height: 100%; 
@@ -39,10 +65,6 @@
     }
 
     body {
-      background:
-        radial-gradient(800px 600px at 15% 10%, rgba(96,165,250,0.08), transparent 35%),
-        radial-gradient(700px 500px at 85% 90%, rgba(110,231,183,0.05), transparent 35%),
-        linear-gradient(180deg, var(--bg), var(--bg-2));
       color: #E6EEF8;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
@@ -56,8 +78,14 @@
       position: relative;
     }
 
+    /* No animations class */
+    .no-animations * {
+      animation-play-state: paused !important;
+      transition: none !important;
+    }
+
     /* Modern, performant background layers (canvas) */
-    #bg-orbs, #bg-stars {
+    #bg-orbs, #bg-stars, #bg-particles-canvas {
       position: fixed;
       inset: 0;
       width: 100%;
@@ -66,6 +94,7 @@
     }
     #bg-orbs { z-index: 0; }
     #bg-stars { z-index: 1; }
+    #bg-particles-canvas { z-index: 0; }
 
     /* Subtle aurora sheen (GPU-friendly) */
     .aurora {
@@ -270,15 +299,12 @@
       border: 1px solid var(--glass-border);
       display: flex; flex-direction: column; gap: 10px; position: relative; overflow: hidden; cursor: pointer;
       transform-origin: center; min-height: 220px;
-      
-      /* PERBAIKAN: Transisi dipindahkan ke sini */
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     .project:hover {
       transform: translateY(-8px) scale(1.02);
       box-shadow: 0 12px 30px rgba(2, 6, 23, 0.8);
       border-color: rgba(96, 165, 250, 0.3);
-      /* Hapus animasi projectRise */
     }
     .project-content { display: flex; flex-direction: column; gap: 10px; position: relative; z-index: 1; }
     .project-icon {
@@ -371,7 +397,6 @@
       0% { transform: translateX(-150%); }
       50%,100% { transform: translateX(150%); }
     }
-    /* Hapus animasi projectRise */
     
     /* ===== TEXT ANIMATION FIX ===== */
     .text-animate { opacity: 0; transition: all 0.6s ease; }
@@ -465,13 +490,14 @@
   max-width: 500px;
 }
 
-/* Tombol plus */
+/* MODIFIKASI: Tombol di tengah dengan animasi naik */
 .nav-toggle {
   position: absolute;
-  bottom: -8px;
-  right: 0;
-  width: 50px;
-  height: 50px;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   background: var(--accent);
   display: flex;
@@ -480,7 +506,7 @@
   cursor: pointer;
   z-index: 1002;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   pointer-events: auto;
 }
 
@@ -491,7 +517,7 @@
 }
 
 .nav-toggle.active i {
-  transform: rotate(45deg);
+  transform: rotate(90deg);
 }
 
 /* Kotak navbar */
@@ -513,10 +539,10 @@
 
   /* Transisi smooth buka-tutup */
   transition:
-    max-height 0.4s ease,
-    padding 0.4s ease,
-    opacity 0.4s ease,
-    transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    max-height 0.6s ease,
+    padding 0.6s ease,
+    opacity 0.6s ease,
+    transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   overflow: hidden;
   z-index: 1001;
 }
@@ -658,23 +684,397 @@
   }
 }
 
-@media (min-width: 768px) {
-  .nav-toggle {
-    bottom: -16px;
-    width: 56px;
-    height: 56px;
-  }
+/* ========== SETTINGS MODAL ========== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
 }
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.settings-modal {
+  width: 90%;
+  max-width: 500px;
+  background: linear-gradient(135deg, rgba(15, 23, 36, 0.9), rgba(11, 19, 34, 0.95));
+  border-radius: var(--radius);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  position: relative;
+  transform: translateY(30px);
+  transition: transform 0.4s ease;
+
+  /* Tambahkan scroll untuk konten modal */
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-overlay.active .settings-modal {
+  transform: translateY(0);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--glass-border);
+  /* Pastikan header tidak ikut discroll */
+  position: sticky;
+  top: -24px; /* offset untuk padding */
+  background: inherit;
+  z-index: 1;
+}
+
+.modal-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--secondary), var(--primary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.close-modal {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.close-modal:hover {
+  color: white;
+  transform: rotate(90deg);
+}
+
+.setting-group {
+  margin-bottom: 20px;
+}
+
+.setting-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.setting-title i {
+  color: var(--primary);
+  font-size: 18px;
+}
+
+.setting-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--glass-border);
+}
+/* Hapus border-bottom pada elemen terakhir */
+.setting-group > .setting-option:last-of-type {
+  border-bottom: none;
+}
+
+
+.setting-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+
+/* Custom toggle switch */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--glass);
+  border: 1px solid var(--glass-border);
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 4px;
+  bottom: 3px;
+  background-color: var(--muted);
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+  background: linear-gradient(90deg, var(--secondary), var(--primary));
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(22px);
+  background-color: white;
+}
+
+/* Radio buttons */
+.radio-group {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.radio-option {
+  flex: 1;
+  padding: 12px;
+  background: var(--glass);
+  border: 1px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.radio-option.active {
+  background: rgba(96, 165, 250, 0.1);
+  border-color: var(--primary);
+}
+
+.radio-option:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.radio-option i {
+  display: block;
+  font-size: 24px;
+  margin-bottom: 8px;
+  color: var(--primary);
+}
+
+.radio-option span {
+  font-size: 12px;
+}
+
+/* Modal footer buttons */
+.modal-footer {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  position: sticky;
+  bottom: -24px;
+  background: inherit;
+  padding-top: 16px;
+  z-index: 1;
+  border-top: 1px solid var(--glass-border);
+}
+
+.modal-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modal-btn.primary {
+  background: linear-gradient(90deg, var(--secondary), var(--primary));
+  color: #041024;
+}
+
+.modal-btn.secondary {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--glass-border);
+}
+
+.modal-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Notification Pop-up */
+.notification {
+  position: fixed;
+  bottom: 120px; /* Di atas navbar */
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  z-index: 5000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s ease;
+}
+.notification.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(-20px);
+}
+
+/* Share Modal */
+.share-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.share-modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.share-modal {
+  width: 90%;
+  max-width: 400px;
+  background: linear-gradient(135deg, rgba(15, 23, 36, 0.9), rgba(11, 19, 34, 0.95));
+  border-radius: var(--radius);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  position: relative;
+  transform: translateY(30px);
+  transition: transform 0.4s ease;
+}
+
+.share-modal-overlay.active .share-modal {
+  transform: translateY(0);
+}
+
+.share-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.share-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--secondary), var(--primary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.share-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.share-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  padding: 16px;
+  border-radius: 12px;
+  background: var(--glass);
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+  color: var(--muted);
+  text-align: center;
+}
+
+.share-option:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+  transform: translateY(-3px);
+  border-color: var(--primary);
+}
+
+.share-option i {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.share-option span {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.share-option.copy {
+  background: linear-gradient(90deg, #6ee7b7, #60a5fa);
+  color: #041024;
+}
+
+.share-option.copy:hover {
+  background: linear-gradient(90deg, #60a5fa, #6ee7b7);
+  color: #041024;
+}
+
+.share-option.twitter i { color: #1da1f2; }
+.share-option.linkedin i { color: #0077b5; }
+.share-option.whatsapp i { color: #25d366; }
+.share-option.telegram i { color: #0088cc; }
+
 
   </style>
 </head>
 <body>
-  <!-- Modern performant background -->
   <canvas id="bg-orbs" aria-hidden="true"></canvas>
   <canvas id="bg-stars" aria-hidden="true"></canvas>
+  <canvas id="bg-particles-canvas" aria-hidden="true"></canvas>
   <div class="aurora" aria-hidden="true"></div>
 
-  <div class="wrap" role="main">
+  <div class="wrap" role="main" id="home">
     <header aria-label="header">
       <div class="brand">
         <div class="logo" aria-hidden="true">VL</div>
@@ -693,7 +1093,6 @@
     </header>
 
     <main>
-      <!-- Left column -->
       <aside class="card" aria-label="profil singkat">
         <div class="profile">
           <div class="avatar" id="avatar">VL</div>
@@ -728,7 +1127,6 @@
         </div>
       </aside>
 
-      <!-- Right column -->
       <section class="hero" aria-label="konten utama">
         <div class="headline">
           <div>
@@ -750,7 +1148,6 @@
             <div style="margin-top:12px">
               <strong id="portfolio-title" class="text-animate fade-in">Projects</strong>
               <div class="grid" id="projects-grid" style="margin-top:8px">
-                <!-- Project 1 -->
                 <article class="project" aria-labelledby="proj1-title">
                   <div class="project-content">
                     <div class="project-icon" style="background: linear-gradient(135deg, rgba(110, 231, 183, 0.15), rgba(96, 165, 250, 0.15)); color: var(--secondary);">
@@ -776,7 +1173,6 @@
                   </div>
                 </article>
 
-                <!-- Project 2 -->
                 <article class="project" aria-labelledby="proj2-title">
                   <div class="project-content">
                     <div class="project-icon" style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(139, 92, 246, 0.15)); color: var(--pink);">
@@ -802,7 +1198,6 @@
                   </div>
                 </article>
 
-                <!-- Project 3 -->
                 <article class="project" aria-labelledby="proj3-title">
                   <div class="project-content">
                     <div class="project-icon" style="background: linear-gradient(135deg, rgba(167, 139, 250, 0.15), rgba(99, 102, 241, 0.15)); color: var(--purple);">
@@ -828,7 +1223,6 @@
                   </div>
                 </article>
 
-                <!-- Project 4 -->
                 <article class="project" aria-labelledby="proj4-title">
                   <div class="project-content">
                     <div class="project-icon" style="background: linear-gradient(135deg, rgba(96, 165, 250, 0.15), rgba(236, 72, 153, 0.15)); color: var(--primary);">
@@ -857,7 +1251,7 @@
             </div>
           </div>
 
-          <aside class="sidebar-section">
+          <aside class="sidebar-section" id="contact">
             <div style="font-weight:700;margin-bottom:8px" id="side-title" class="text-animate color-shift">Let's build</div>
             <p id="side-text" class="text-animate fade-in">Saya terbuka untuk kontrak jangka pendek & full-time. Kirim pesan, mari ngobrol soal ide kamu.</p>
             <div class="sidebar-buttons">
@@ -870,42 +1264,40 @@
     </main>
   </div>
   
-  <!-- Bottom Navigation -->
   <div class="nav-container">
     <div class="nav-wrapper">
       <div class="nav-toggle" id="navToggle">
-        <i class="fas fa-plus"></i>
+        <i class="fas fa-bars"></i>
       </div>
       <div class="nav-bar" id="navBar">
         <div class="nav-links">
-          <a href="#" class="nav-link">
+          <a href="#home" class="nav-link home-link">
             <i class="fas fa-home"></i>
             <span>Home</span>
           </a>
-          <a href="#projects" class="nav-link">
+          <a href="#projects-grid" class="nav-link project-link">
             <i class="fas fa-folder"></i>
             <span>Projects</span>
           </a>
-          <a href="#contact" class="nav-link">
+          <a href="mailto:hello@example.com?subject=Hi%20Vyr" class="nav-link contact-link">
             <i class="fas fa-envelope"></i>
             <span>Contact</span>
           </a>
-          <!-- Ubah About menjadi More -->
-          <a href="#about" class="nav-link more" id="navMore">
+          <a href="#" class="nav-link more" id="navMore">
             <i class="fas fa-ellipsis-h"></i>
             <span>More</span>
           </a>
         </div>
         <div class="nav-expanded">
-          <a href="#" class="expanded-link">
+          <a href="#" class="expanded-link" id="settingsBtn">
             <i class="fas fa-cog"></i>
             <span>Settings</span>
           </a>
-          <a href="#" class="expanded-link">
+          <a href="#" class="expanded-link" id="downloadCvExpanded">
             <i class="fas fa-download"></i>
-            <span>Download</span>
+            <span>Download CV</span>
           </a>
-          <a href="#" class="expanded-link">
+          <a href="#" class="expanded-link" id="shareBtn">
             <i class="fas fa-share-alt"></i>
             <span>Share</span>
           </a>
@@ -926,27 +1318,151 @@
     </div>
   </div>
 
+  <div class="notification" id="notification">
+    <i class="fas fa-check-circle"></i> Pengaturan disimpan!
+  </div>
+  
+  <div class="modal-overlay" id="settingsModal">
+    <div class="settings-modal">
+      <div class="modal-header">
+        <h2>Settings</h2>
+        <button class="close-modal" id="closeModal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="setting-group">
+        <h3 class="setting-title"><i class="fas fa-palette"></i> Theme & Appearance</h3>
+        
+        <div class="setting-option" style="display:none;">
+          <div class="setting-label">
+            <i class="fas fa-moon"></i>
+            <span>Dark Mode</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="darkModeToggle" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        
+        <div class="setting-option">
+          <div class="setting-label">
+            <i class="fas fa-brush"></i>
+            <span>Background Effects</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="backgroundToggle" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        
+        <div class="setting-option">
+          <div class="setting-label">
+            <i class="fas fa-bolt"></i>
+            <span>Animations</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="animationsToggle" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      
+      <div class="setting-group">
+        <h3 class="setting-title"><i class="fas fa-layer-group"></i> Background Style</h3>
+        <div class="radio-group" id="theme-options">
+          <div class="radio-option active" data-theme="aurora">
+            <i class="fas fa-cloud-sun"></i>
+            <span>Aurora</span>
+          </div>
+          <div class="radio-option" data-theme="particles">
+            <i class="fas fa-atom"></i>
+            <span>Particles</span>
+          </div>
+          </div>
+      </div>
+      
+      <div class="setting-group">
+        <h3 class="setting-title"><i class="fas fa-sliders-h"></i> Advanced Settings</h3>
+        <div class="setting-option">
+          <div class="setting-label">
+            <i class="fas fa-battery-three-quarters"></i>
+            <span>Performance Mode</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="performanceToggle">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button class="modal-btn secondary" id="resetBtn">Reset Defaults</button>
+        <button class="modal-btn primary" id="saveBtn">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="share-modal-overlay" id="shareModal">
+    <div class="share-modal">
+      <div class="share-header">
+        <h2>Share My Portfolio</h2>
+        <button class="close-modal" id="closeShareModal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="share-options">
+        <a href="#" class="share-option copy">
+          <i class="fas fa-link"></i>
+          <span>Copy Link</span>
+        </a>
+        <a href="#" class="share-option twitter" id="shareTwitter">
+          <i class="fab fa-twitter"></i>
+          <span>Twitter</span>
+        </a>
+        <a href="#" class="share-option linkedin" id="shareLinkedIn">
+          <i class="fab fa-linkedin"></i>
+          <span>LinkedIn</span>
+        </a>
+        <a href="#" class="share-option whatsapp" id="shareWhatsapp">
+          <i class="fab fa-whatsapp"></i>
+          <span>WhatsApp</span>
+        </a>
+        <a href="#" class="share-option telegram" id="shareTelegram">
+          <i class="fab fa-telegram-plane"></i>
+          <span>Telegram</span>
+        </a>
+        <a href="#" class="share-option" id="shareNative">
+          <i class="fas fa-share-alt"></i>
+          <span>More...</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
   <script>
     // ---------- Modern, performant background (Canvas) ----------
     (function backgroundSystem(){
-      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const isMobile = window.innerWidth <= 768;
       const DPR = Math.min(window.devicePixelRatio || 1, 2);
-
-      // Stars Canvas
+      
       const starCanvas = document.getElementById('bg-stars');
       const starCtx = starCanvas.getContext('2d');
-
-      // Orbs Canvas (soft gradient blobs)
       const orbCanvas = document.getElementById('bg-orbs');
       const orbCtx = orbCanvas.getContext('2d');
-
+      const aurora = document.querySelector('.aurora');
+      
+      const particlesCanvas = document.getElementById('bg-particles-canvas');
+      const particlesCtx = particlesCanvas.getContext('2d');
+      
       let W = window.innerWidth, H = window.innerHeight;
 
       function resizeCanvas() {
         W = window.innerWidth; H = window.innerHeight;
 
-        [starCanvas, orbCanvas].forEach(c => {
+        [starCanvas, orbCanvas, particlesCanvas].forEach(c => {
           c.width = Math.floor(W * DPR);
           c.height = Math.floor(H * DPR);
           c.style.width = W + 'px';
@@ -957,19 +1473,20 @@
         starCtx.scale(DPR, DPR);
         orbCtx.setTransform(1,0,0,1,0,0);
         orbCtx.scale(DPR, DPR);
+        particlesCtx.setTransform(1,0,0,1,0,0);
+        particlesCtx.scale(DPR, DPR);
       }
       window.addEventListener('resize', resizeCanvas, { passive: true });
       resizeCanvas();
 
       // --------- Aurora Orbs (very lightweight) ---------
-      // Mengurangi jumlah orbs untuk perangkat mobile
       const ORB_COUNT = isMobile ? 3 : W > 1200 ? 5 : 4;
       const orbs = [];
       function initOrbs(){
         orbs.length = 0;
         for(let i=0;i<ORB_COUNT;i++){
-          const r = Math.random()*160 + 120; // big glow
-          const hueChoices = [160, 200, 260, 320]; // mint, blue, indigo, magenta accents
+          const r = Math.random()*160 + 120;
+          const hueChoices = [160, 200, 260, 320];
           const hue = hueChoices[Math.floor(Math.random()*hueChoices.length)];
           orbs.push({
             x: Math.random()*W,
@@ -977,8 +1494,8 @@
             r,
             hue,
             alpha: 0.08 + Math.random()*0.08,
-            vx: prefersReduced ? 0 : (Math.random()*0.3 - 0.15), // Hentikan animasi jika preferensi pengurangan gerakan
-            vy: prefersReduced ? 0 : (Math.random()*0.3 - 0.15)
+            vx: (Math.random()*0.3 - 0.15),
+            vy: (Math.random()*0.3 - 0.15)
           });
         }
       }
@@ -996,7 +1513,6 @@
           orbCtx.arc(o.x, o.y, o.r, 0, Math.PI*2);
           orbCtx.fill();
 
-          // Hentikan animasi jika preferensi pengurangan gerakan
           if (!prefersReduced) {
             o.x += o.vx; o.y += o.vy;
             if(o.x < -o.r) o.x = W + o.r;
@@ -1009,7 +1525,6 @@
       }
 
       // --------- Stars (constellation-lite, parallax) ---------
-      // Mengurangi jumlah bintang untuk perangkat mobile
       const BASE_STARS = isMobile ? 40 : W > 1400 ? 100 : W > 1024 ? 80 : 60;
       const stars = [];
       let parallax = { x: 0, y: 0 }, targetParallax = { x: 0, y: 0 };
@@ -1021,8 +1536,8 @@
             x: Math.random()*W,
             y: Math.random()*H,
             r: Math.random()*1.2 + 0.6,
-            depth: Math.random()*0.7 + 0.3, // 0.3..1
-            twinkle: prefersReduced ? 0 : Math.random()*1.2 + 0.6, // Hentikan animasi jika preferensi pengurangan gerakan
+            depth: Math.random()*0.7 + 0.3,
+            twinkle: Math.random()*1.2 + 0.6,
             phase: Math.random()*Math.PI*2
           });
         }
@@ -1032,11 +1547,9 @@
       function drawStars(time){
         starCtx.clearRect(0,0,W,H);
 
-        // Smooth parallax lerp
         parallax.x += (targetParallax.x - parallax.x)*0.06;
         parallax.y += (targetParallax.y - parallax.y)*0.06;
 
-        // Draw stars
         for(const s of stars){
           const tw = prefersReduced ? 1 : 0.65 + 0.35 * Math.sin((time*0.001*s.twinkle) + s.phase);
           const alpha = 0.5 * s.depth * tw + 0.15;
@@ -1051,14 +1564,12 @@
           starCtx.fill();
         }
 
-        // Skip constellation links if reduced motion
         if (prefersReduced) return;
-
-        // A few minimal "constellation" links per frame (random subset, O(n))
+        
         starCtx.globalAlpha = 0.06;
         starCtx.strokeStyle = 'rgba(160, 200, 255, 0.5)';
         starCtx.lineWidth = 1;
-        const tries = isMobile ? 5 : 10; // Lebih sedikit di mobile
+        const tries = isMobile ? 5 : 10;
         for(let i=0;i<tries;i++){
           const a = stars[(Math.random()*stars.length)|0];
           const b = stars[(Math.random()*stars.length)|0];
@@ -1073,51 +1584,140 @@
         }
         starCtx.globalAlpha = 1;
       }
+      
+      // --------- Unik & Modern Particles (Canvas) ---------
+      const PARTICLE_COUNT = isMobile ? 60 : 150;
+      const particles = [];
+      function initParticles() {
+        particles.length = 0;
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+          particles.push({
+            x: Math.random() * W,
+            y: Math.random() * H,
+            r: Math.random() * 0.8 + 0.5,
+            color: `hsla(${Math.random() * 360}, 70%, 80%, ${Math.random() * 0.3 + 0.1})`,
+            vx: (Math.random() - 0.5) * 0.3,
+            vy: (Math.random() - 0.5) * 0.3,
+            opacity: 0,
+            targetOpacity: Math.random() * 0.7 + 0.3,
+            phase: Math.random() * Math.PI * 2
+          });
+        }
+      }
+      initParticles();
 
-      // Cursor parallax (very light) - hanya jika tidak preferensi pengurangan gerakan
+      function drawParticles(time) {
+        particlesCtx.clearRect(0, 0, W, H);
+        particlesCtx.globalCompositeOperation = 'lighter';
+        for (const p of particles) {
+          if (!prefersReduced) {
+            p.x += p.vx;
+            p.y += p.vy;
+
+            p.opacity += (p.targetOpacity * (0.5 + 0.5 * Math.sin(time*0.0005 + p.phase)) - p.opacity) * 0.05;
+
+            if (p.x < 0 || p.x > W || p.y < 0 || p.y > H) {
+              // Reset particle when it goes out of bounds
+              p.x = Math.random() * W;
+              p.y = Math.random() * H;
+              p.vx = (Math.random() - 0.5) * 0.3;
+              p.vy = (Math.random() - 0.5) * 0.3;
+            }
+          }
+
+          particlesCtx.beginPath();
+          particlesCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2, false);
+          particlesCtx.fillStyle = `rgba(255, 255, 255, ${p.opacity * 0.8})`;
+          particlesCtx.fill();
+        }
+      }
+
+
+      function updateBackgroundState(theme, enableBg, enableAnimations) {
+        // Toggle body classes for different themes
+        document.body.classList.remove('theme-aurora', 'theme-particles', 'theme-gradient');
+        if (enableBg) {
+          document.body.classList.add(`theme-${theme}`);
+        } else {
+          document.body.classList.add('theme-gradient'); // Fallback to gradient if disabled
+        }
+        
+        // Handle canvas and aurora visibility
+        if (enableBg) {
+          aurora.style.display = 'none';
+          orbCanvas.style.display = 'none';
+          starCanvas.style.display = 'none';
+          particlesCanvas.style.display = 'none';
+          
+          if (theme === 'aurora') {
+            aurora.style.display = 'block';
+            orbCanvas.style.display = 'block';
+            starCanvas.style.display = 'block';
+          } else if (theme === 'particles') {
+            particlesCanvas.style.display = 'block';
+          }
+        } else {
+          orbCanvas.style.display = 'none';
+          aurora.style.display = 'none';
+          starCanvas.style.display = 'none';
+          particlesCanvas.style.display = 'none';
+        }
+
+        // Handle animations
+        prefersReduced = !enableAnimations;
+        if(enableAnimations && enableBg){
+          startAnimationLoop();
+        } else {
+          stopAnimationLoop();
+          // Draw a single static frame if background is enabled but animations are off
+          if(enableBg){
+            if(theme === 'aurora') {
+              drawOrbs();
+              drawStars(0);
+            }
+            if(theme === 'particles') drawParticles(0);
+          }
+        }
+      }
+
       if (!prefersReduced) {
         window.addEventListener('pointermove', (e) => {
           const cx = W/2, cy = H/2;
           const dx = (e.clientX - cx) / cx;
           const dy = (e.clientY - cy) / cy;
-          targetParallax.x = dx * 10; // small offset
+          targetParallax.x = dx * 10;
           targetParallax.y = dy * 10;
         }, { passive: true });
       }
 
-      // Animation loop (pause when hidden)
       let rafId = null;
-      let running = !prefersReduced;
+      let running = false;
       function frame(t){
         if(!running) return;
-        drawOrbs();
-        drawStars(t);
+        
+        // Cek tema yang aktif dan hanya jalankan fungsi yang relevan
+        if(document.body.classList.contains('theme-aurora')) {
+          drawOrbs();
+          drawStars(t);
+        } else if (document.body.classList.contains('theme-particles')) {
+          drawParticles(t);
+        }
+        
         rafId = requestAnimationFrame(frame);
       }
-
-      function start(){
-        if(prefersReduced){
-          // Static draw only
-          drawOrbs();
-          drawStars(0);
-          return;
-        }
+      function startAnimationLoop(){
         if(rafId == null){
           running = true;
           rafId = requestAnimationFrame(frame);
         }
       }
-      function stop(){
+      function stopAnimationLoop(){
         running = false;
         if(rafId != null) cancelAnimationFrame(rafId);
         rafId = null;
       }
-
-      document.addEventListener('visibilitychange', () => {
-        if(document.hidden) stop(); else start();
-      });
-
-      start();
+      
+      window.updateBackgroundState = updateBackgroundState;
     })();
 
     // ---------- Scroll animations ----------
@@ -1185,6 +1785,7 @@
 
     // ---------- Utility ----------
     const $ = (s, root=document) => root.querySelector(s);
+    const $$ = (s, root=document) => root.querySelectorAll(s);
     const persistKey = 'portfolio_lang_v2';
 
     // ---------- Elements ----------
@@ -1209,6 +1810,25 @@
     const navToggle = document.getElementById('navToggle');
     const navBar = document.getElementById('navBar');
     const navMore = document.getElementById('navMore');
+    const settingsBtn = document.getElementById('settingsBtn');
+    const settingsModal = document.getElementById('settingsModal');
+    const closeModal = document.getElementById('closeModal');
+    const backgroundToggle = document.getElementById('backgroundToggle');
+    const animationsToggle = document.getElementById('animationsToggle');
+    const themeOptions = $$('.radio-option');
+    const saveBtn = $('#saveBtn');
+    const resetBtn = $('#resetBtn');
+    const performanceToggle = $('#performanceToggle');
+    const notification = $('#notification');
+    
+    // Share modal elements
+    const shareBtn = $('#shareBtn');
+    const shareModal = $('#shareModal');
+    const closeShareModal = $('#closeShareModal');
+    const shareOptions = $$('.share-option');
+
+    // State sementara untuk settings modal
+    let tempSettings = {};
 
     // ---------- Language logic ----------
     function detectLang(){
@@ -1249,6 +1869,81 @@
       HIRE_BTN.innerHTML = `<i class="fas fa-handshake"></i> ${t.hire}`;
     }
 
+    // ---------- Settings Functions ----------
+    function applySettings(settings) {
+      // Background effects
+      const enableBg = settings.backgroundEnabled;
+      const theme = settings.backgroundTheme;
+      const enableAnimations = settings.animationsEnabled;
+      const performanceMode = settings.performanceMode;
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      
+      window.updateBackgroundState(theme, enableBg, enableAnimations && !prefersReducedMotion && !performanceMode);
+      
+      // Animations toggle (for CSS animations)
+      document.body.classList.toggle('no-animations', !enableAnimations || performanceMode || prefersReducedMotion);
+      
+      // Persist settings
+      localStorage.setItem('settings', JSON.stringify(settings));
+    }
+    
+    function loadSettings() {
+      try {
+        const savedSettings = JSON.parse(localStorage.getItem('settings'));
+        const defaultSettings = {
+          backgroundEnabled: true,
+          animationsEnabled: true,
+          backgroundTheme: 'aurora',
+          performanceMode: false
+        };
+        const settings = {...defaultSettings, ...savedSettings};
+        
+        // Apply settings on load
+        applySettings(settings);
+        
+        // Store current settings in temp state
+        tempSettings = {...settings};
+        
+        // Update modal UI
+        backgroundToggle.checked = settings.backgroundEnabled;
+        animationsToggle.checked = settings.animationsEnabled;
+        performanceToggle.checked = settings.performanceMode;
+        
+        themeOptions.forEach(option => {
+          option.classList.toggle('active', option.dataset.theme === settings.backgroundTheme);
+        });
+      } catch (e) {
+        console.error("Failed to load settings:", e);
+        // Fallback to default
+        applySettings({
+          backgroundEnabled: true,
+          animationsEnabled: true,
+          backgroundTheme: 'aurora',
+          performanceMode: false
+        });
+        loadSettings(); // re-run to update UI
+      }
+    }
+    
+    function updateModalUI(settings) {
+      backgroundToggle.checked = settings.backgroundEnabled;
+      animationsToggle.checked = settings.animationsEnabled;
+      performanceToggle.checked = settings.performanceMode;
+      
+      themeOptions.forEach(option => {
+        option.classList.toggle('active', option.dataset.theme === settings.backgroundTheme);
+      });
+    }
+
+    function showNotification(message) {
+      notification.textContent = message;
+      notification.classList.add('show');
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+    }
+
+
     // ---------- Attach events ----------
     btnId.addEventListener('click', ()=>setLang('id'));
     btnEn.addEventListener('click', ()=>setLang('en'));
@@ -1283,73 +1978,243 @@
       }
     });
 
-    // Bottom Nav Toggle
+    // MODIFIKASI: Animasi tombol naik
+    function getOffset(level) {
+      const isDesktop = window.innerWidth > 480;
+      if (level === 1) {
+        return isDesktop ? '-60px' : '-60px';
+      } else if (level === 2) {
+        return isDesktop ? '-180px' : '-220px';
+      }
+    }
+
     navToggle.addEventListener('click', () => {
       navToggle.classList.toggle('active');
       navBar.classList.toggle('active');
-      
-      // Animate the toggle button
-      if (navToggle.classList.contains('active')) {
-        navToggle.style.transform = 'translateY(-10px)';
+
+      if (navBar.classList.contains('active')) {
+        navToggle.style.transform = `translate(-50%, ${getOffset(1)})`;
+        navToggle.querySelector('i').className = 'fas fa-times';
       } else {
-        navToggle.style.transform = 'translateY(0)';
-      }
-      
-      // Reset More menu when closing
-      if (!navBar.classList.contains('active')) {
+        navToggle.style.transform = 'translate(-50%, 0)';
+        navToggle.querySelector('i').className = 'fas fa-bars';
         navBar.classList.remove('expanded');
         resetMoreIcon();
       }
     });
 
-    // Close navbar when clicking outside
+    navMore.addEventListener('click', (e) => {
+      e.preventDefault();
+      const isExpanded = navBar.classList.toggle('expanded');
+      
+      // Close main nav and toggle more button icon
+      if (isExpanded) {
+        navToggle.classList.add('active');
+        navBar.classList.add('active');
+        navToggle.style.transform = `translate(-50%, ${getOffset(2)})`;
+        navMore.classList.add('active');
+        navMore.querySelector('i').className = 'fas fa-times';
+      } else {
+        navToggle.style.transform = `translate(-50%, ${getOffset(1)})`;
+        navMore.classList.remove('active');
+        navMore.querySelector('i').className = 'fas fa-ellipsis-h';
+      }
+
+      // Ensure main toggle button reflects state correctly
+      if (navBar.classList.contains('active')) {
+        navToggle.querySelector('i').className = 'fas fa-times';
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      if (navBar.classList.contains('active')) {
+        if (navBar.classList.contains('expanded')) {
+          navToggle.style.transform = `translate(-50%, ${getOffset(2)})`;
+        } else {
+          navToggle.style.transform = `translate(-50%, ${getOffset(1)})`;
+        }
+      } else {
+        navToggle.style.transform = 'translate(-50%, 0)';
+      }
+    });
+
     document.addEventListener('click', (e) => {
       if (navBar.classList.contains('active') && 
           !navBar.contains(e.target) && 
-          !navToggle.contains(e.target)) {
+          !navToggle.contains(e.target) &&
+          !settingsModal.contains(e.target) &&
+          !shareModal.contains(e.target)) {
         navToggle.classList.remove('active');
-        navBar.classList.remove('active');
-        navBar.classList.remove('expanded');
-        navToggle.style.transform = 'translateY(0)';
+        navBar.classList.remove('active', 'expanded');
+        navToggle.style.transform = 'translate(-50%, 0)';
+        navToggle.querySelector('i').className = 'fas fa-bars';
         resetMoreIcon();
       }
     });
 
-    // More menu toggle
-    navMore.addEventListener('click', (e) => {
-      e.preventDefault();
-      
-      // Open navbar if it's closed
-      if (!navBar.classList.contains('active')) {
-        navBar.classList.add('active');
-        navToggle.classList.add('active');
-        navToggle.style.transform = 'translateY(-10px)';
-      }
-      
-      // Toggle expanded state
-      navBar.classList.toggle('expanded');
-      
-      // Update icon
-      const icon = navMore.querySelector('i');
-      if (navBar.classList.contains('expanded')) {
-        icon.className = 'fas fa-times';
-        navMore.classList.add('active');
-      } else {
-        icon.className = 'fas fa-ellipsis-h';
-        navMore.classList.remove('active');
-      }
-    });
-    
     function resetMoreIcon() {
       const icon = navMore.querySelector('i');
       icon.className = 'fas fa-ellipsis-h';
       navMore.classList.remove('active');
     }
+    
+    // Settings modal functions
+    settingsBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      loadSettings();
+      settingsModal.classList.add('active');
+      
+      navToggle.classList.remove('active');
+      navBar.classList.remove('active', 'expanded');
+      navToggle.style.transform = 'translate(-50%, 0)';
+      navToggle.querySelector('i').className = 'fas fa-bars';
+      resetMoreIcon();
+    });
+    
+    closeModal.addEventListener('click', () => {
+      settingsModal.classList.remove('active');
+    });
+    
+    settingsModal.addEventListener('click', (e) => {
+      if (e.target === settingsModal) {
+        settingsModal.classList.remove('active');
+      }
+    });
+    
+    // Handle changes in modal UI (update temp state)
+    backgroundToggle.addEventListener('change', (e) => {
+      tempSettings.backgroundEnabled = e.target.checked;
+    });
+    animationsToggle.addEventListener('change', (e) => {
+      tempSettings.animationsEnabled = e.target.checked;
+    });
+    performanceToggle.addEventListener('change', (e) => {
+      tempSettings.performanceMode = e.target.checked;
+    });
+
+    themeOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        tempSettings.backgroundTheme = option.dataset.theme;
+        updateModalUI(tempSettings);
+      });
+    });
+
+    saveBtn.addEventListener('click', () => {
+      applySettings(tempSettings);
+      settingsModal.classList.remove('active');
+      showNotification('Pengaturan disimpan!');
+    });
+
+    resetBtn.addEventListener('click', () => {
+      const defaultSettings = {
+        backgroundEnabled: true,
+        animationsEnabled: true,
+        backgroundTheme: 'aurora',
+        performanceMode: false
+      };
+      tempSettings = {...defaultSettings};
+      updateModalUI(tempSettings);
+    });
+    
+    // Nav links smooth scroll
+    const navLinks = document.querySelectorAll('.nav-link:not(.more)');
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            // Hapus baris ini untuk contact link
+            if (!link.classList.contains('contact-link')) {
+              e.preventDefault();
+              
+              const targetId = link.getAttribute('href');
+              if (targetId) {
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                }
+              }
+            }
+            
+            navToggle.classList.remove('active');
+            navBar.classList.remove('active', 'expanded');
+            navToggle.style.transform = 'translate(-50%, 0)';
+            navToggle.querySelector('i').className = 'fas fa-bars';
+            resetMoreIcon();
+        });
+    });
+    
+
+    const downloadCvExpanded = document.getElementById('downloadCvExpanded');
+    downloadCvExpanded.addEventListener('click', (e) => {
+      e.preventDefault();
+      // Logic download CV
+      CTA_BTN.click(); 
+      
+      navToggle.classList.remove('active');
+      navBar.classList.remove('active', 'expanded');
+      navToggle.style.transform = 'translate(-50%, 0)';
+      navToggle.querySelector('i').className = 'fas fa-bars';
+      resetMoreIcon();
+    });
+
+    // Share Modal Logic
+    shareBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        shareModal.classList.add('active');
+        
+        navToggle.classList.remove('active');
+        navBar.classList.remove('active', 'expanded');
+        navToggle.style.transform = 'translate(-50%, 0)';
+        navToggle.querySelector('i').className = 'fas fa-bars';
+        resetMoreIcon();
+    });
+
+    closeShareModal.addEventListener('click', () => {
+        shareModal.classList.remove('active');
+    });
+
+    shareModal.addEventListener('click', (e) => {
+        if (e.target === shareModal) {
+            shareModal.classList.remove('active');
+        }
+    });
+
+    shareOptions.forEach(option => {
+        option.addEventListener('click', (e) => {
+            e.preventDefault();
+            const url = window.location.href;
+            const title = document.title;
+            const text = 'Check out Vyr Lix\'s creative portfolio!';
+
+            if (option.classList.contains('copy')) {
+                navigator.clipboard.writeText(url).then(() => {
+                    showNotification('Link berhasil disalin!');
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                });
+            } else if (option.id === 'shareTwitter') {
+                window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
+            } else if (option.id === 'shareLinkedIn') {
+                window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}&summary=${encodeURIComponent(text)}`, '_blank');
+            } else if (option.id === 'shareWhatsapp') {
+                window.open(`whatsapp://send?text=${encodeURIComponent(text + ' ' + url)}`);
+            } else if (option.id === 'shareTelegram') {
+                window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
+            } else if (option.id === 'shareNative' && navigator.share) {
+                navigator.share({
+                    title: title,
+                    text: text,
+                    url: url,
+                }).catch(console.error);
+            }
+            
+            shareModal.classList.remove('active');
+        });
+    });
 
     // initialize
     (function init(){
       const initial = detectLang();
       setLang(initial);
+      loadSettings();
     })();
   </script>
 </body>
