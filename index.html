@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
-    /* ========== Reset & base ========== */
+    /* ========== VARIABLES & RESET ========== */
     :root {
       --bg: #0f1724;
       --bg-2: #0b1322;
@@ -29,32 +29,6 @@
       font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
       color-scheme: dark;
     }
-
-    /* THEME STYLES */
-    .theme-aurora .aurora { display: block; }
-    .theme-aurora #bg-orbs { display: block; }
-    .theme-aurora #bg-stars { display: block; }
-    .theme-particles .aurora { display: none; }
-    .theme-particles #bg-orbs { display: block; }
-    .theme-particles #bg-stars { display: none; }
-    .theme-gradient .aurora { display: none; }
-    .theme-gradient #bg-orbs { display: none; }
-    .theme-gradient #bg-stars { display: none; }
-
-    /* Theme-specific background gradients */
-    .theme-gradient body {
-      background: linear-gradient(135deg, #1d2538, #0e121a);
-    }
-    
-    .theme-particles body {
-      background: linear-gradient(180deg, var(--bg), var(--bg-2));
-    }
-    .theme-aurora body {
-       background: radial-gradient(800px 600px at 15% 10%, rgba(96,165,250,0.08), transparent 35%),
-        radial-gradient(700px 500px at 85% 90%, rgba(110,231,183,0.05), transparent 35%),
-        linear-gradient(180deg, var(--bg), var(--bg-2));
-    }
-
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { 
@@ -84,6 +58,7 @@
       transition: none !important;
     }
 
+    /* ========== BACKGROUND STYLES ========== */
     /* Modern, performant background layers (canvas) */
     #bg-orbs, #bg-stars, #bg-particles-canvas {
       position: fixed;
@@ -109,6 +84,32 @@
       filter: blur(28px) saturate(120%);
       opacity: 0.7;
     }
+    
+    /* THEME STYLES */
+    .theme-aurora .aurora { display: block; }
+    .theme-aurora #bg-orbs { display: block; }
+    .theme-aurora #bg-stars { display: block; }
+    .theme-particles .aurora { display: none; }
+    .theme-particles #bg-orbs { display: block; }
+    .theme-particles #bg-stars { display: none; }
+    .theme-gradient .aurora { display: none; }
+    .theme-gradient #bg-orbs { display: none; }
+    .theme-gradient #bg-stars { display: none; }
+
+    /* Theme-specific background gradients */
+    .theme-gradient body {
+      background: linear-gradient(135deg, #1d2538, #0e121a);
+    }
+    
+    .theme-particles body {
+      background: linear-gradient(180deg, var(--bg), var(--bg-2));
+    }
+    .theme-aurora body {
+       background: radial-gradient(800px 600px at 15% 10%, rgba(96,165,250,0.08), transparent 35%),
+        radial-gradient(700px 500px at 85% 90%, rgba(110,231,183,0.05), transparent 35%),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
+    }
+
     @media (prefers-reduced-motion: no-preference) {
       .aurora {
         animation: auroraShift 22s ease-in-out infinite alternate;
@@ -119,7 +120,7 @@
       }
     }
 
-    /* ========== Layout ========== */
+    /* ========== LAYOUT & COMPONENTS ========== */
     .wrap {
       position: relative;
       z-index: 2;
@@ -348,29 +349,152 @@
     .sidebar-buttons { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
     .sidebar-btn { width: 100%; text-align: center; }
 
-    /* responsive */
-    @media (max-width: 980px) {
-      main { grid-template-columns: 1fr; }
-      .about { grid-template-columns: 1fr; }
-      .grid { grid-template-columns: 1fr 1fr; }
-      .wrap { padding: 0 12px; }
+    /* ========== NEW CONTACT SECTION STYLES ========== */
+    .contact-section {
+      grid-column: 1 / -1; /* Make it span full width in the main grid */
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow);
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      text-align: center;
     }
-    @media (max-width: 560px) {
-      .grid { grid-template-columns: 1fr; }
-      .profile { flex-direction: row; }
-      .title h1 { font-size: 16px; }
-      .logo { width: 48px; height: 48px; font-size: 16px; }
-      header { padding: 10px; }
-      body { padding: 18px 12px; }
-      .project-actions { flex-direction: row; height: 0; }
-      .project:hover .project-actions { height: 32px; }
-      .action-btn { padding: 8px; }
-      .headline { flex-direction: column; align-items: flex-start; }
-      .cta { flex-direction: row; width: 100%; margin-top: 12px; }
-      .btn { width: auto; flex: 1; }
+    .contact-section h2 {
+      font-size: 24px;
+      font-weight: 700;
+    }
+    .contact-section .subtitle {
+      color: var(--muted);
+      max-width: 500px;
+      margin: 0 auto 16px;
+      font-size: 15px;
+    }
+    #contact-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      max-width: 700px;
+      width: 100%;
+      margin: 0 auto;
+      text-align: left;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+    #contact-form label {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--muted);
+    }
+    #contact-form input,
+    #contact-form textarea {
+      background: var(--glass-2);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      color: #E6EEF8;
+      font-family: inherit;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+    #contact-form input:focus,
+    #contact-form textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
+    }
+    #contact-form textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+    #contact-form .btn {
+      grid-column: 1 / -1;
+      justify-self: center;
+      width: auto;
+      min-width: 200px;
+      padding: 12px 24px;
+    }
+    #contact-form .btn.is-loading {
+      cursor: not-allowed;
     }
 
-    /* Animations */
+    /* Modifikasi untuk garis "Or find me on" */
+    .socials-divider {
+      margin-top: 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 500;
+      position: relative;
+      overflow: hidden;
+    }
+    .socials-divider::before,
+    .socials-divider::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 40%; /* Atur lebar garis */
+      height: 1px;
+      background: var(--glass-border);
+    }
+    .socials-divider::before {
+      left: 0;
+    }
+    .socials-divider::after {
+      right: 0;
+    }
+    @media (max-width: 560px) {
+      .socials-divider::before,
+      .socials-divider::after {
+        width: 30%;
+      }
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .social-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 18px;
+      transition: all 0.3s ease;
+    }
+    .social-link:hover {
+      transform: translateY(-4px);
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    }
+    /* Animasi warna ikon saat hover */
+    .social-link.github:hover { color: #fff; }
+    .social-link.linkedin:hover { color: #0077b5; }
+    .social-link.twitter:hover { color: #1da1f2; }
+    .social-link.telegram:hover { color: #0088cc; }
+
+
+    /* ========== ANIMATIONS ========== */
     @keyframes float {
       0% { transform: translateY(0px); }
       50% { transform: translateY(-10px); }
@@ -465,607 +589,609 @@
       background: linear-gradient(90deg, var(--secondary), var(--primary));
       -webkit-background-clip: text; background-clip: text; color: transparent;
       background-size: 0% 100%; background-repeat: no-repeat; opacity: 0;
+      transition: opacity 0.6s ease;
     }
     .gradient-reveal.visible { animation: gradientReveal 1.2s ease-out forwards, fadeIn 0.6s forwards; }
     @keyframes gradientReveal { 0%{ background-size: 0% 100%; } 100%{ background-size: 100% 100%; } }
+
+    /* New CSS for project animation */
+    .project-animate {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.6s ease-out, transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .project-animate.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
     
-/* ========== BOTTOM NAVIGATION ========== */
-.nav-container {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  display: flex;
-  justify-content: center;
-  padding: 0 16px 16px;
-  pointer-events: none;
-}
-
-.nav-wrapper {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  max-width: 500px;
-}
-
-/* MODIFIKASI: Tombol di tengah dengan animasi naik */
-.nav-toggle {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: var(--accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 1002;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-  transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  pointer-events: auto;
-}
-
-.nav-toggle i {
-  font-size: 20px;
-  color: #041024;
-  transition: transform 0.3s ease;
-}
-
-.nav-toggle.active i {
-  transform: rotate(90deg);
-}
-
-/* Kotak navbar */
-.nav-bar {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  background: var(--card);
-  backdrop-filter: blur(10px);
-  border-radius: 24px;
-  border: 1px solid var(--glass-border);
-  box-shadow: 0 8px 30px rgba(2, 6, 23, 0.8);
-
-  /* Awal: hanya setinggi nav-links */
-  max-height: 90px;
-  opacity: 0;
-  transform: translateY(100%);
-  pointer-events: none;
-
-  /* Transisi smooth buka-tutup */
-  transition:
-    max-height 0.6s ease,
-    padding 0.6s ease,
-    opacity 0.6s ease,
-    transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  overflow: hidden;
-  z-index: 1001;
-}
-
-/* Saat navbar dibuka */
-.nav-bar.active {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-
-/* Kontainer link utama */
-.nav-links {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  padding: 16px;
-  gap: 8px;
-}
-
-/* Link utama */
-.nav-link {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-decoration: none;
-  color: var(--muted);
-  padding: 10px;
-  border-radius: 12px;
-  transition: all 0.3s ease;
-}
-
-.nav-link:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: white;
-  transform: translateY(-3px);
-}
-
-.nav-link i {
-  font-size: 18px;
-  margin-bottom: 4px;
-  transition: transform 0.3s ease;
-}
-
-.nav-link:hover i {
-  transform: scale(1.1);
-}
-
-.nav-link span {
-  font-size: 12px;
-  font-weight: 500;
-}
-
-/* Menu tambahan (hidden awal) */
-.nav-expanded {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  padding: 0 16px;
-  opacity: 0;
-  max-height: 0;
-  overflow: hidden;
-  transition:
-    opacity 0.4s ease,
-    max-height 0.4s ease,
-    padding 0.4s ease;
-}
-
-/* Saat expanded aktif */
-.nav-bar.expanded {
-  max-height: 280px; /* cukup untuk nav-links + expanded */
-}
-
-.nav-bar.active.expanded .nav-expanded {
-  opacity: 1;
-  max-height: 200px;
-  padding: 16px;
-}
-
-/* Item di expanded */
-.expanded-link {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  text-decoration: none;
-  color: var(--muted);
-  padding: 10px;
-  border-radius: 10px;
-  background: var(--glass);
-  transition: all 0.3s ease;
-  transform: translateY(10px);
-  opacity: 0;
-}
-
-.expanded-link:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: white;
-  transform: translateY(-2px);
-}
-
-.expanded-link i {
-  font-size: 14px;
-}
-
-.expanded-link span {
-  font-size: 12px;
-  font-weight: 500;
-}
-
-/* Animasi per item */
-.nav-bar.active.expanded .expanded-link {
-  transform: translateY(0);
-  opacity: 1;
-}
-.nav-bar.active.expanded .expanded-link:nth-child(1) { transition-delay: 0.1s; }
-.nav-bar.active.expanded .expanded-link:nth-child(2) { transition-delay: 0.15s; }
-.nav-bar.active.expanded .expanded-link:nth-child(3) { transition-delay: 0.2s; }
-.nav-bar.active.expanded .expanded-link:nth-child(4) { transition-delay: 0.25s; }
-.nav-bar.active.expanded .expanded-link:nth-child(5) { transition-delay: 0.3s; }
-.nav-bar.active.expanded .expanded-link:nth-child(6) { transition-delay: 0.35s; }
-
-/* Efek pada tombol More saat aktif */
-.nav-link.more.active {
-  background: rgba(255, 255, 255, 0.08);
-  color: white;
-}
-
-.nav-link.more.active i {
-  transform: rotate(45deg);
-  color: var(--primary);
-}
-
-/* Responsif */
-@media (max-width: 480px) {
-  .nav-links {
-    grid-template-columns: repeat(4, 1fr);
-  }
-  .nav-expanded {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* ========== SETTINGS MODAL ========== */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 3000;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s ease;
-}
-
-.modal-overlay.active {
-  opacity: 1;
-  visibility: visible;
-}
-
-.settings-modal {
-  width: 90%;
-  max-width: 500px;
-  background: linear-gradient(135deg, rgba(15, 23, 36, 0.9), rgba(11, 19, 34, 0.95));
-  border-radius: var(--radius);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow);
-  padding: 24px;
-  position: relative;
-  transform: translateY(30px);
-  transition: transform 0.4s ease;
-
-  /* Tambahkan scroll untuk konten modal */
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-.modal-overlay.active .settings-modal {
-  transform: translateY(0);
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--glass-border);
-  /* Pastikan header tidak ikut discroll */
-  position: sticky;
-  top: -24px; /* offset untuk padding */
-  background: inherit;
-  z-index: 1;
-}
-
-.modal-header h2 {
-  font-size: 22px;
-  font-weight: 700;
-  background: linear-gradient(90deg, var(--secondary), var(--primary));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.close-modal {
-  background: none;
-  border: none;
-  color: var(--muted);
-  font-size: 20px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.close-modal:hover {
-  color: white;
-  transform: rotate(90deg);
-}
-
-.setting-group {
-  margin-bottom: 20px;
-}
-
-.setting-title {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.setting-title i {
-  color: var(--primary);
-  font-size: 18px;
-}
-
-.setting-option {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--glass-border);
-}
-/* Hapus border-bottom pada elemen terakhir */
-.setting-group > .setting-option:last-of-type {
-  border-bottom: none;
-}
-
-
-.setting-label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 14px;
-}
-
-/* Custom toggle switch */
-.toggle-switch {
-  position: relative;
-  display: inline-block;
-  width: 50px;
-  height: 26px;
-}
-
-.toggle-switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.toggle-slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: var(--glass);
-  border: 1px solid var(--glass-border);
-  transition: .4s;
-  border-radius: 34px;
-}
-
-.toggle-slider:before {
-  position: absolute;
-  content: "";
-  height: 18px;
-  width: 18px;
-  left: 4px;
-  bottom: 3px;
-  background-color: var(--muted);
-  transition: .4s;
-  border-radius: 50%;
-}
-
-input:checked + .toggle-slider {
-  background: linear-gradient(90deg, var(--secondary), var(--primary));
-}
-
-input:checked + .toggle-slider:before {
-  transform: translateX(22px);
-  background-color: white;
-}
-
-/* Radio buttons */
-.radio-group {
-  display: flex;
-  gap: 12px;
-  margin-top: 8px;
-}
-
-.radio-option {
-  flex: 1;
-  padding: 12px;
-  background: var(--glass);
-  border: 1px solid transparent;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: center;
-}
-
-.radio-option.active {
-  background: rgba(96, 165, 250, 0.1);
-  border-color: var(--primary);
-}
-
-.radio-option:hover {
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.radio-option i {
-  display: block;
-  font-size: 24px;
-  margin-bottom: 8px;
-  color: var(--primary);
-}
-
-.radio-option span {
-  font-size: 12px;
-}
-
-/* Modal footer buttons */
-.modal-footer {
-  display: flex;
-  gap: 12px;
-  margin-top: 24px;
-  position: sticky;
-  bottom: -24px;
-  background: inherit;
-  padding-top: 16px;
-  z-index: 1;
-  border-top: 1px solid var(--glass-border);
-}
-
-.modal-btn {
-  flex: 1;
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.modal-btn.primary {
-  background: linear-gradient(90deg, var(--secondary), var(--primary));
-  color: #041024;
-}
-
-.modal-btn.secondary {
-  background: transparent;
-  color: var(--muted);
-  border: 1px solid var(--glass-border);
-}
-
-.modal-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-/* Notification Pop-up */
-.notification {
-  position: fixed;
-  bottom: 120px; /* Di atas navbar */
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(8px);
-  padding: 12px 24px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
-  font-weight: 600;
-  font-size: 14px;
-  z-index: 5000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.4s ease;
-}
-.notification.show {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(-50%) translateY(-20px);
-}
-
-/* Share Modal */
-.share-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 3000;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s ease;
-}
-
-.share-modal-overlay.active {
-  opacity: 1;
-  visibility: visible;
-}
-
-.share-modal {
-  width: 90%;
-  max-width: 400px;
-  background: linear-gradient(135deg, rgba(15, 23, 36, 0.9), rgba(11, 19, 34, 0.95));
-  border-radius: var(--radius);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow);
-  padding: 24px;
-  position: relative;
-  transform: translateY(30px);
-  transition: transform 0.4s ease;
-}
-
-.share-modal-overlay.active .share-modal {
-  transform: translateY(0);
-}
-
-.share-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--glass-border);
-}
-
-.share-header h2 {
-  font-size: 22px;
-  font-weight: 700;
-  background: linear-gradient(90deg, var(--secondary), var(--primary));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.share-options {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-
-.share-option {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  padding: 16px;
-  border-radius: 12px;
-  background: var(--glass);
-  border: 1px solid transparent;
-  transition: all 0.3s ease;
-  color: var(--muted);
-  text-align: center;
-}
-
-.share-option:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: white;
-  transform: translateY(-3px);
-  border-color: var(--primary);
-}
-
-.share-option i {
-  font-size: 28px;
-  margin-bottom: 8px;
-}
-
-.share-option span {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.share-option.copy {
-  background: linear-gradient(90deg, #6ee7b7, #60a5fa);
-  color: #041024;
-}
-
-.share-option.copy:hover {
-  background: linear-gradient(90deg, #60a5fa, #6ee7b7);
-  color: #041024;
-}
-
-.share-option.twitter i { color: #1da1f2; }
-.share-option.linkedin i { color: #0077b5; }
-.share-option.whatsapp i { color: #25d366; }
-.share-option.telegram i { color: #0088cc; }
-
-
+    .project.project-animate.is-visible:hover {
+      transform: translateY(-8px) scale(1.02);
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .project-animate.is-hidden {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    
+    /* Project tags animation */
+    .project-tags > * {
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    
+    .project-tags.is-visible > *:nth-child(1) { transition-delay: 0.1s; }
+    .project-tags.is-visible > *:nth-child(2) { transition-delay: 0.15s; }
+    .project-tags.is-visible > *:nth-child(3) { transition-delay: 0.2s; }
+    .project-tags.is-visible > *:nth-child(4) { transition-delay: 0.25s; }
+    .project-tags.is-visible > *:nth-child(5) { transition-delay: 0.3s; }
+    
+    .project-tags.is-visible > * {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .project-tags.is-hidden > * {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    /* ========== BOTTOM NAVIGATION ========== */
+    .nav-container {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      padding: 0 16px 16px;
+      pointer-events: none;
+    }
+
+    .nav-wrapper {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    /* MODIFIKASI: Tombol di tengah dengan animasi naik */
+    .nav-toggle {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 1002;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+      transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: auto;
+    }
+
+    .nav-toggle i {
+      font-size: 20px;
+      color: #041024;
+      transition: transform 0.3s ease;
+    }
+
+    .nav-toggle.active i {
+      transform: rotate(90deg);
+    }
+
+    /* NEW: Auto-hide state for the hamburger button */
+    .nav-toggle.auto-hide {
+      transform: translateX(-50%) scale(0.8) translateY(24px) !important;
+      opacity: 0.7;
+    }
+
+    /* Kotak navbar */
+    .nav-bar {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background: var(--card);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 8px 30px rgba(2, 6, 23, 0.8);
+
+      /* Awal: hanya setinggi nav-links */
+      max-height: 90px;
+      opacity: 0;
+      transform: translateY(100%);
+      pointer-events: none;
+
+      /* Transisi smooth buka-tutup */
+      transition:
+        max-height 0.6s ease,
+        padding 0.6s ease,
+        opacity 0.6s ease,
+        transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      overflow: hidden;
+      z-index: 1001;
+    }
+
+    /* Saat navbar dibuka */
+    .nav-bar.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    /* Kontainer link utama */
+    .nav-links {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      padding: 16px;
+      gap: 8px;
+    }
+
+    /* Link utama */
+    .nav-link {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: var(--muted);
+      padding: 10px;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+      transform: translateY(-3px);
+    }
+
+    .nav-link i {
+      font-size: 18px;
+      margin-bottom: 4px;
+      transition: transform 0.3s ease;
+    }
+
+    .nav-link:hover i {
+      transform: scale(1.1);
+    }
+
+    .nav-link span {
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    /* Menu tambahan (hidden awal) */
+    .nav-expanded {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 0 16px;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition:
+        opacity 0.4s ease,
+        max-height 0.4s ease,
+        padding 0.4s ease;
+    }
+
+    /* Saat expanded aktif */
+    .nav-bar.expanded {
+      max-height: 280px; /* cukup untuk nav-links + expanded */
+    }
+
+    .nav-bar.active.expanded .nav-expanded {
+      opacity: 1;
+      max-height: 200px;
+      padding: 16px;
+    }
+
+    /* Item di expanded */
+    .expanded-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--muted);
+      padding: 10px;
+      border-radius: 10px;
+      background: var(--glass);
+      transition: all 0.3s ease;
+      transform: translateY(10px);
+      opacity: 0;
+    }
+
+    .expanded-link:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .expanded-link i {
+      font-size: 14px;
+    }
+
+    .expanded-link span {
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    /* Animasi per item */
+    .nav-bar.active.expanded .expanded-link {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    .nav-bar.active.expanded .expanded-link:nth-child(1) { transition-delay: 0.1s; }
+    .nav-bar.active.expanded .expanded-link:nth-child(2) { transition-delay: 0.15s; }
+    .nav-bar.active.expanded .expanded-link:nth-child(3) { transition-delay: 0.2s; }
+    .nav-bar.active.expanded .expanded-link:nth-child(4) { transition-delay: 0.25s; }
+    .nav-bar.active.expanded .expanded-link:nth-child(5) { transition-delay: 0.3s; }
+    .nav-bar.active.expanded .expanded-link:nth-child(6) { transition-delay: 0.35s; }
+
+    /* Efek pada tombol More saat aktif */
+    .nav-link.more.active {
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+    }
+
+    .nav-link.more.active i {
+      transform: rotate(45deg);
+      color: var(--primary);
+    }
+
+    /* ========== MODALS ========== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .settings-modal, .share-modal {
+      width: 90%;
+      max-width: 500px;
+      background: linear-gradient(135deg, rgba(15, 23, 36, 0.9), rgba(11, 19, 34, 0.95));
+      border-radius: var(--radius);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      position: relative;
+      transform: translateY(30px);
+      transition: transform 0.4s ease;
+
+      /* Tambahkan scroll untuk konten modal */
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-overlay.active .settings-modal,
+    .modal-overlay.active .share-modal {
+      transform: translateY(0);
+    }
+
+    .modal-header, .share-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--glass-border);
+      /* Pastikan header tidak ikut discroll */
+      position: sticky;
+      top: -24px; /* offset untuk padding */
+      background: inherit;
+      z-index: 1;
+    }
+
+    .modal-header h2, .share-header h2 {
+      font-size: 22px;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--secondary), var(--primary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .close-modal {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .close-modal:hover {
+      color: white;
+      transform: rotate(90deg);
+    }
+
+    .setting-group {
+      margin-bottom: 20px;
+    }
+
+    .setting-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .setting-title i {
+      color: var(--primary);
+      font-size: 18px;
+    }
+
+    .setting-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--glass-border);
+    }
+    /* Hapus border-bottom pada elemen terakhir */
+    .setting-group > .setting-option:last-of-type {
+      border-bottom: none;
+    }
+
+    .setting-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+    }
+
+    /* Custom toggle switch */
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 26px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--glass);
+      border: 1px solid var(--glass-border);
+      transition: .4s;
+      border-radius: 34px;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 4px;
+      bottom: 3px;
+      background-color: var(--muted);
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .toggle-slider {
+      background: linear-gradient(90deg, var(--secondary), var(--primary));
+    }
+
+    input:checked + .toggle-slider:before {
+      transform: translateX(22px);
+      background-color: white;
+    }
+
+    /* Radio buttons */
+    .radio-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .radio-option {
+      flex: 1;
+      padding: 12px;
+      background: var(--glass);
+      border: 1px solid transparent;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .radio-option.active {
+      background: rgba(96, 165, 250, 0.1);
+      border-color: var(--primary);
+    }
+
+    .radio-option:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .radio-option i {
+      display: block;
+      font-size: 24px;
+      margin-bottom: 8px;
+      color: var(--primary);
+    }
+
+    .radio-option span {
+      font-size: 12px;
+    }
+
+    /* Modal footer buttons */
+    .modal-footer {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      position: sticky;
+      bottom: -24px;
+      background: inherit;
+      padding-top: 16px;
+      z-index: 1;
+      border-top: 1px solid var(--glass-border);
+    }
+
+    .modal-btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 12px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .modal-btn.primary {
+      background: linear-gradient(90deg, var(--secondary), var(--primary));
+      color: #041024;
+    }
+
+    .modal-btn.secondary {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--glass-border);
+    }
+
+    .modal-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Share options */
+    .share-options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .share-option {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      padding: 16px;
+      border-radius: 12px;
+      background: var(--glass);
+      border: 1px solid transparent;
+      transition: all 0.3s ease;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .share-option:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+      transform: translateY(-3px);
+      border-color: var(--primary);
+    }
+
+    .share-option.copy {
+      background: linear-gradient(90deg, #6ee7b7, #60a5fa);
+      color: #041024;
+    }
+
+    .share-option.copy:hover {
+      background: linear-gradient(90deg, #60a5fa, #6ee7b7);
+      color: #041024;
+    }
+
+    .share-option.twitter i { color: #1da1f2; }
+    .share-option.linkedin i { color: #0077b5; }
+    .share-option.whatsapp i { color: #25d366; }
+    .share-option.telegram i { color: #0088cc; }
+
+    /* Notification Pop-up */
+    .notification {
+      position: fixed;
+      bottom: 120px; /* Di atas navbar */
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(8px);
+      padding: 12px 24px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      font-weight: 600;
+      font-size: 14px;
+      z-index: 5000;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s ease;
+    }
+    .notification.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(-20px);
+    }
+
+    /* ========== RESPONSIVE STYLES ========== */
+    @media (max-width: 980px) {
+      main { grid-template-columns: 1fr; }
+      .about { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: 1fr 1fr; }
+      .wrap { padding: 0 12px; }
+    }
+    @media (max-width: 768px) {
+      #contact-form {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 560px) {
+      .grid { grid-template-columns: 1fr; }
+      .profile { flex-direction: row; }
+      .title h1 { font-size: 16px; }
+      .logo { width: 48px; height: 48px; font-size: 16px; }
+      header { padding: 10px; }
+      body { padding: 18px 12px; }
+      .project-actions { flex-direction: row; height: 0; }
+      .project:hover .project-actions { height: 32px; }
+      .action-btn { padding: 8px; }
+      .headline { flex-direction: column; align-items: flex-start; }
+      .cta { flex-direction: row; width: 100%; margin-top: 12px; }
+      .btn { width: auto; flex: 1; }
+      .nav-links { grid-template-columns: repeat(4, 1fr); }
+      .nav-expanded { grid-template-columns: repeat(2, 1fr); }
+      .contact-section { padding: 20px; }
+    }
   </style>
 </head>
 <body>
@@ -1148,18 +1274,18 @@ input:checked + .toggle-slider:before {
             <div style="margin-top:12px">
               <strong id="portfolio-title" class="text-animate fade-in">Projects</strong>
               <div class="grid" id="projects-grid" style="margin-top:8px">
-                <article class="project" aria-labelledby="proj1-title">
+                <article class="project project-animate is-hidden" aria-labelledby="proj1-title">
                   <div class="project-content">
                     <div class="project-icon" style="background: linear-gradient(135deg, rgba(110, 231, 183, 0.15), rgba(96, 165, 250, 0.15)); color: var(--secondary);">
                       <i class="fas fa-link"></i>
                     </div>
-                    <h4 id="proj1-title" class="text-animate slide-left"><i class="fas fa-rocket" style="color: var(--secondary);"></i> SmartDecode</h4>
-                    <p id="proj1-desc" class="text-animate fade-in">Tool untuk mendeteksi dan membuka link shortener & layanan hosting (contoh: Google Drive). Click untuk demo.</p>
+                    <h4 id="proj1-title" class="project-animate is-hidden"><i class="fas fa-rocket" style="color: var(--secondary);"></i> SmartDecode</h4>
+                    <p id="proj1-desc" class="project-animate is-hidden">Tool untuk mendeteksi dan membuka link shortener & layanan hosting (contoh: Google Drive). Click untuk demo.</p>
                     <div class="project-footer">
-                      <div class="project-tags">
-                        <span class="project-tag text-animate fade-in">JavaScript</span>
-                        <span class="project-tag text-animate fade-in">API</span>
-                        <span class="project-tag text-animate fade-in">Security</span>
+                      <div class="project-tags project-animate is-hidden">
+                        <span class="project-tag">JavaScript</span>
+                        <span class="project-tag">API</span>
+                        <span class="project-tag">Security</span>
                       </div>
                       <div class="project-actions">
                         <a href="https://vyrina.github.io/smartdecode" target="_blank" rel="noopener" class="action-btn demo-btn">
@@ -1173,18 +1299,18 @@ input:checked + .toggle-slider:before {
                   </div>
                 </article>
 
-                <article class="project" aria-labelledby="proj2-title">
+                <article class="project project-animate is-hidden" aria-labelledby="proj2-title">
                   <div class="project-content">
                     <div class="project-icon" style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(139, 92, 246, 0.15)); color: var(--pink);">
                       <i class="fas fa-paint-brush"></i>
                     </div>
-                    <h4 id="proj2-title" class="text-animate slide-left"><i class="fas fa-palette" style="color: var(--pink);"></i> UI Motion Lab</h4>
-                    <p id="proj2-desc" class="text-animate fade-in">Koleksi komponen UI animasi modern untuk website dan aplikasi mobile dengan dokumentasi lengkap.</p>
+                    <h4 id="proj2-title" class="project-animate is-hidden"><i class="fas fa-palette" style="color: var(--pink);"></i> UI Motion Lab</h4>
+                    <p id="proj2-desc" class="project-animate is-hidden">Koleksi komponen UI animasi modern untuk website dan aplikasi mobile dengan dokumentasi lengkap.</p>
                     <div class="project-footer">
-                      <div class="project-tags">
-                        <span class="project-tag text-animate fade-in">React</span>
-                        <span class="project-tag text-animate fade-in">Framer Motion</span>
-                        <span class="project-tag text-animate fade-in">UI/UX</span>
+                      <div class="project-tags project-animate is-hidden">
+                        <span class="project-tag">React</span>
+                        <span class="project-tag">Framer Motion</span>
+                        <span class="project-tag">UI/UX</span>
                       </div>
                       <div class="project-actions">
                         <a href="#" class="action-btn demo-btn">
@@ -1198,18 +1324,18 @@ input:checked + .toggle-slider:before {
                   </div>
                 </article>
 
-                <article class="project" aria-labelledby="proj3-title">
+                <article class="project project-animate is-hidden" aria-labelledby="proj3-title">
                   <div class="project-content">
                     <div class="project-icon" style="background: linear-gradient(135deg, rgba(167, 139, 250, 0.15), rgba(99, 102, 241, 0.15)); color: var(--purple);">
                       <i class="fas fa-bolt"></i>
                     </div>
-                    <h4 id="proj3-title" class="text-animate slide-left"><i class="fas fa-tools" style="color: var(--purple);"></i> DevFlow Automator</h4>
-                    <p id="proj3-desc" class="text-animate fade-in">Alat otomatisasi untuk mempercepat workflow developer dengan integrasi CI/CD dan deployment.</p>
+                    <h4 id="proj3-title" class="project-animate is-hidden"><i class="fas fa-tools" style="color: var(--purple);"></i> DevFlow Automator</h4>
+                    <p id="proj3-desc" class="project-animate is-hidden">Alat otomatisasi untuk mempercepat workflow developer dengan integrasi CI/CD và deployment.</p>
                     <div class="project-footer">
-                      <div class="project-tags">
-                        <span class="project-tag text-animate fade-in">Python</span>
-                        <span class="project-tag text-animate fade-in">Automation</span>
-                        <span class="project-tag text-animate fade-in">DevOps</span>
+                      <div class="project-tags project-animate is-hidden">
+                        <span class="project-tag">Python</span>
+                        <span class="project-tag">Automation</span>
+                        <span class="project-tag">DevOps</span>
                       </div>
                       <div class="project-actions">
                         <a href="#" class="action-btn demo-btn">
@@ -1223,18 +1349,18 @@ input:checked + .toggle-slider:before {
                   </div>
                 </article>
 
-                <article class="project" aria-labelledby="proj4-title">
+                <article class="project project-animate is-hidden" aria-labelledby="proj4-title">
                   <div class="project-content">
                     <div class="project-icon" style="background: linear-gradient(135deg, rgba(96, 165, 250, 0.15), rgba(236, 72, 153, 0.15)); color: var(--primary);">
                       <i class="fas fa-mobile-alt"></i>
                     </div>
-                    <h4 id="proj4-title" class="text-animate slide-left"><i class="fas fa-lock" style="color: var(--primary);"></i> SecureChat</h4>
-                    <p id="proj4-desc" class="text-animate fade-in">Aplikasi chat end-to-end encrypted dengan fitur penghancur pesan otomatis dan verifikasi keamanan.</p>
+                    <h4 id="proj4-title" class="project-animate is-hidden"><i class="fas fa-lock" style="color: var(--primary);"></i> SecureChat</h4>
+                    <p id="proj4-desc" class="project-animate is-hidden">Aplikasi chat end-to-end encrypted dengan fitur penghancur pesan otomatis và verifikasi keamanan.</p>
                     <div class="project-footer">
-                      <div class="project-tags">
-                        <span class="project-tag text-animate fade-in">Android</span>
-                        <span class="project-tag text-animate fade-in">Kotlin</span>
-                        <span class="project-tag text-animate fade-in">Encryption</span>
+                      <div class="project-tags project-animate is-hidden">
+                        <span class="project-tag">Android</span>
+                        <span class="project-tag">Kotlin</span>
+                        <span class="project-tag">Encryption</span>
                       </div>
                       <div class="project-actions">
                         <a href="#" class="action-btn demo-btn">
@@ -1261,7 +1387,50 @@ input:checked + .toggle-slider:before {
           </aside>
         </div>
       </section>
-    </main>
+
+      <section class="contact-section text-animate slide-up" id="contact-form-section">
+        <h2 class="text-animate gradient-reveal">Get in Touch</h2>
+        <p class="subtitle text-animate fade-in">
+          Have a project in mind, or just want to say hi? Fill out the form below or find me on other platforms.
+        </p>
+        <form id="contact-form">
+          <div class="form-group text-animate slide-right">
+            <label for="from_name">Your Name</label>
+            <input type="text" id="from_name" name="from_name" placeholder="John Doe" required>
+          </div>
+          <div class="form-group text-animate slide-left">
+            <label for="from_email">Your Email</label>
+            <input type="email" id="from_email" name="from_email" placeholder="john.doe@example.com" required>
+          </div>
+          <div class="form-group full-width text-animate slide-up">
+            <label for="message">Your Message</label>
+            <textarea id="message" name="message" placeholder="Hi Vyr, let's talk about..." required></textarea>
+          </div>
+          <button type="submit" class="btn text-animate bounce" id="submit-btn">
+            <i class="fas fa-paper-plane"></i> Send Message
+          </button>
+        </form>
+
+        <div class="socials-divider text-animate fade-in">
+          Or find me on
+        </div>
+
+        <div class="social-links">
+          <a href="https://github.com/vyrina" target="_blank" rel="noopener" class="social-link github text-animate bounce" style="transition-delay: 0.1s;">
+            <i class="fab fa-github"></i>
+          </a>
+          <a href="https://www.linkedin.com" target="_blank" rel="noopener" class="social-link linkedin text-animate bounce" style="transition-delay: 0.2s;">
+            <i class="fab fa-linkedin-in"></i>
+          </a>
+          <a href="https://twitter.com" target="_blank" rel="noopener" class="social-link twitter text-animate bounce" style="transition-delay: 0.3s;">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="https://t.me/" target="_blank" rel="noopener" class="social-link telegram text-animate bounce" style="transition-delay: 0.4s;">
+            <i class="fab fa-telegram-plane"></i>
+          </a>
+        </div>
+      </section>
+      </main>
   </div>
   
   <div class="nav-container">
@@ -1279,7 +1448,7 @@ input:checked + .toggle-slider:before {
             <i class="fas fa-folder"></i>
             <span>Projects</span>
           </a>
-          <a href="mailto:hello@example.com?subject=Hi%20Vyr" class="nav-link contact-link">
+          <a href="#contact-form-section" class="nav-link contact-link">
             <i class="fas fa-envelope"></i>
             <span>Contact</span>
           </a>
@@ -1394,6 +1563,16 @@ input:checked + .toggle-slider:before {
             <span class="toggle-slider"></span>
           </label>
         </div>
+        <div class="setting-option">
+          <div class="setting-label">
+            <i class="fas fa-eye-slash"></i>
+            <span>Auto-hide navigation button</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="autoHideToggle" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
       </div>
       
       <div class="modal-footer">
@@ -1403,7 +1582,7 @@ input:checked + .toggle-slider:before {
     </div>
   </div>
 
-  <div class="share-modal-overlay" id="shareModal">
+  <div class="modal-overlay" id="shareModal">
     <div class="share-modal">
       <div class="share-header">
         <h2>Share My Portfolio</h2>
@@ -1441,8 +1620,21 @@ input:checked + .toggle-slider:before {
     </div>
   </div>
 
+  <script type="text/javascript"
+    src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js">
+  </script>
+  <script type="text/javascript">
+    (function(){
+        emailjs.init("YOUR_PUBLIC_KEY"); // <-- GANTI DENGAN PUBLIC KEY ANDA
+    })();
+  </script>
+
   <script>
-    // ---------- Modern, performant background (Canvas) ----------
+    // ========== UTILITY FUNCTIONS ==========
+    const $ = (s, root = document) => root.querySelector(s);
+    const $$ = (s, root = document) => root.querySelectorAll(s);
+    
+    // ========== BACKGROUND SYSTEM ==========
     (function backgroundSystem(){
       let prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const isMobile = window.innerWidth <= 768;
@@ -1632,7 +1824,6 @@ input:checked + .toggle-slider:before {
         }
       }
 
-
       function updateBackgroundState(theme, enableBg, enableAnimations) {
         // Toggle body classes for different themes
         document.body.classList.remove('theme-aurora', 'theme-particles', 'theme-gradient');
@@ -1720,7 +1911,7 @@ input:checked + .toggle-slider:before {
       window.updateBackgroundState = updateBackgroundState;
     })();
 
-    // ---------- Scroll animations ----------
+    // ========== SCROLL ANIMATIONS ==========
     (function setupScrollAnimations(){
       const animateOnScroll = (elements) => {
         const observer = new IntersectionObserver((entries) => {
@@ -1738,10 +1929,84 @@ input:checked + .toggle-slider:before {
           }
         });
       };
+      // Make sure all elements with this class are observed, including the new ones
       animateOnScroll(document.querySelectorAll('.text-animate'));
     })();
+    
+    // ========== PROJECT ANIMATIONS ==========
+    (function setupProjectAnimations(){
+        const projects = document.querySelectorAll('.project-animate');
+        if (projects.length === 0) return;
+        
+        let lastScrollY = window.scrollY;
+        
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px 0px -60px 0px',
+            threshold: 0.1
+        };
 
-    // ---------- Localization text ----------
+        const observer = new IntersectionObserver((entries) => {
+            const isScrollingDown = window.scrollY > lastScrollY;
+            lastScrollY = window.scrollY;
+
+            entries.forEach(entry => {
+                const element = entry.target;
+
+                if (entry.isIntersecting) {
+                    // Cek jika proyek utama sudah terlihat
+                    if (element.classList.contains('project')) {
+                        const title = element.querySelector('.project-title');
+                        const description = element.querySelector('.project-description');
+                        
+                        // Pastikan judul dan deskripsi sudah terlihat sebelum menampilkan tag
+                        if (title && description) {
+                            const titleRect = title.getBoundingClientRect();
+                            const descRect = description.getBoundingClientRect();
+                            
+                            // Menampilkan tag hanya jika judul dan deskripsi sudah terlihat
+                            if (titleRect.top < window.innerHeight && descRect.top < window.innerHeight) {
+                                const tags = element.querySelector('.project-tags');
+                                if (tags) {
+                                    tags.classList.add('is-visible');
+                                    tags.classList.remove('is-hidden');
+                                }
+                            }
+                        }
+                    }
+
+                    element.classList.add('is-visible');
+                    element.classList.remove('is-hidden');
+
+                } else {
+                    // Hanya hilangkan elemen saat scroll ke atas
+                    if (!isScrollingDown) {
+                        // Cek apakah elemen sudah di bagian atas viewport
+                        if (entry.boundingClientRect.top < 0) {
+                            // Do nothing
+                        } else {
+                            element.classList.add('is-hidden');
+                            element.classList.remove('is-visible');
+                            // Sembunyikan tag juga
+                            if (element.classList.contains('project')) {
+                                const tags = element.querySelector('.project-tags');
+                                if (tags) {
+                                    tags.classList.add('is-hidden');
+                                    tags.classList.remove('is-visible');
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }, observerOptions);
+
+        projects.forEach(project => {
+            observer.observe(project);
+        });
+    })();
+
+    // ========== LOCALIZATION ==========
     const TEXT = {
       id: {
         'brandSub': 'Pengembang • Desainer',
@@ -1783,54 +2048,56 @@ input:checked + .toggle-slider:before {
       }
     };
 
-    // ---------- Utility ----------
-    const $ = (s, root=document) => root.querySelector(s);
-    const $$ = (s, root=document) => root.querySelectorAll(s);
+    // ========== STATE MANAGEMENT ==========
     const persistKey = 'portfolio_lang_v2';
-
-    // ---------- Elements ----------
-    const btnId = $('#btn-id');
-    const btnEn = $('#btn-en');
-    const langBtns = [btnId, btnEn];
-    const BRAND_SUB = $('#brand-sub');
-    const ROLE = $('#role');
-    const CONTACT_TITLE = $('#contact-title');
-    const SKILLS_TITLE = $('#skills-title');
-    const HELLO = $('#hello');
-    const TAGLINE = $('#tagline');
-    const ABOUT_TEXT = $('#about-text');
-    const PORTF_TITLE = $('#portfolio-title');
-    const PROJ1_TITLE = $('#proj1-title');
-    const PROJ1_DESC = $('#proj1-desc');
-    const SIDE_TITLE = $('#side-title');
-    const SIDE_TEXT = $('#side-text');
-    const CTA_BTN = $('#cta-btn');
-    const CONTACT_BTN = $('#contact-btn');
-    const HIRE_BTN = $('#hire-btn');
-    const navToggle = document.getElementById('navToggle');
-    const navBar = document.getElementById('navBar');
-    const navMore = document.getElementById('navMore');
-    const settingsBtn = document.getElementById('settingsBtn');
-    const settingsModal = document.getElementById('settingsModal');
-    const closeModal = document.getElementById('closeModal');
-    const backgroundToggle = document.getElementById('backgroundToggle');
-    const animationsToggle = document.getElementById('animationsToggle');
-    const themeOptions = $$('.radio-option');
-    const saveBtn = $('#saveBtn');
-    const resetBtn = $('#resetBtn');
-    const performanceToggle = $('#performanceToggle');
-    const notification = $('#notification');
-    
-    // Share modal elements
-    const shareBtn = $('#shareBtn');
-    const shareModal = $('#shareModal');
-    const closeShareModal = $('#closeShareModal');
-    const shareOptions = $$('.share-option');
-
-    // State sementara untuk settings modal
     let tempSettings = {};
+    
+    // ========== ELEMENTS ==========
+    const elements = {
+      btnId: $('#btn-id'),
+      btnEn: $('#btn-en'),
+      langBtns: $$('.lang-btn'),
+      BRAND_SUB: $('#brand-sub'),
+      ROLE: $('#role'),
+      CONTACT_TITLE: $('#contact-title'),
+      SKILLS_TITLE: $('#skills-title'),
+      HELLO: $('#hello'),
+      TAGLINE: $('#tagline'),
+      ABOUT_TEXT: $('#about-text'),
+      PORTF_TITLE: $('#portfolio-title'),
+      PROJ1_TITLE: $('#proj1-title'),
+      PROJ1_DESC: $('#proj1-desc'),
+      SIDE_TITLE: $('#side-title'),
+      SIDE_TEXT: $('#side-text'),
+      CTA_BTN: $('#cta-btn'),
+      CONTACT_BTN: $('#contact-btn'),
+      HIRE_BTN: $('#hire-btn'),
+      navToggle: $('#navToggle'),
+      navBar: $('#navBar'),
+      navMore: $('#navMore'),
+      settingsBtn: $('#settingsBtn'),
+      settingsModal: $('#settingsModal'),
+      closeModal: $('#closeModal'),
+      backgroundToggle: $('#backgroundToggle'),
+      animationsToggle: $('#animationsToggle'),
+      themeOptions: $$('.radio-option'),
+      saveBtn: $('#saveBtn'),
+      resetBtn: $('#resetBtn'),
+      performanceToggle: $('#performanceToggle'),
+      autoHideToggle: $('#autoHideToggle'),
+      notification: $('#notification'),
+      shareBtn: $('#shareBtn'),
+      shareModal: $('#shareModal'),
+      closeShareModal: $('#closeShareModal'),
+      shareOptions: $$('.share-option'),
+      downloadCvExpanded: $('#downloadCvExpanded'),
+      navLinks: $$('.nav-link:not(.more)'),
+      // New elements for contact form
+      contactForm: $('#contact-form'),
+      submitBtn: $('#submit-btn')
+    };
 
-    // ---------- Language logic ----------
+    // ========== LANGUAGE FUNCTIONS ==========
     function detectLang(){
       try{
         const saved = localStorage.getItem(persistKey);
@@ -1846,30 +2113,30 @@ input:checked + .toggle-slider:before {
       if(!(l==='id' || l==='en')) l='en';
       document.documentElement.lang = l;
       try{ localStorage.setItem(persistKey, l); }catch(e){}
-      langBtns.forEach(b => {
+      elements.langBtns.forEach(b => {
         b.classList.toggle('active', b.dataset.lang === l);
         b.setAttribute('aria-selected', (b.dataset.lang === l).toString());
       });
 
       const t = TEXT[l];
-      BRAND_SUB.textContent = t.brandSub;
-      ROLE.textContent = t.role;
-      CONTACT_TITLE.textContent = t.contactTitle;
-      SKILLS_TITLE.textContent = t.skillsTitle;
-      HELLO.textContent = t.hello;
-      TAGLINE.textContent = t.tagline;
-      ABOUT_TEXT.textContent = t.aboutText;
-      PORTF_TITLE.textContent = t.portfolioTitle;
-      PROJ1_TITLE.textContent = t.proj1Title;
-      PROJ1_DESC.textContent = t.proj1Desc;
-      SIDE_TITLE.textContent = t.sideTitle;
-      SIDE_TEXT.textContent = t.sideText;
-      CTA_BTN.innerHTML = `<i class="fas fa-download"></i> ${t.cta}`;
-      CONTACT_BTN.innerHTML = `<i class="fas fa-envelope"></i> ${t.contactBtn}`;
-      HIRE_BTN.innerHTML = `<i class="fas fa-handshake"></i> ${t.hire}`;
+      elements.BRAND_SUB.textContent = t.brandSub;
+      elements.ROLE.textContent = t.role;
+      elements.CONTACT_TITLE.textContent = t.contactTitle;
+      elements.SKILLS_TITLE.textContent = t.skillsTitle;
+      elements.HELLO.textContent = t.hello;
+      elements.TAGLINE.textContent = t.tagline;
+      elements.ABOUT_TEXT.textContent = t.aboutText;
+      elements.PORTF_TITLE.textContent = t.portfolioTitle;
+      elements.PROJ1_TITLE.textContent = t.proj1Title;
+      elements.PROJ1_DESC.textContent = t.proj1Desc;
+      elements.SIDE_TITLE.textContent = t.sideTitle;
+      elements.SIDE_TEXT.textContent = t.sideText;
+      elements.CTA_BTN.innerHTML = `<i class="fas fa-download"></i> ${t.cta}`;
+      elements.CONTACT_BTN.innerHTML = `<i class="fas fa-envelope"></i> ${t.contactBtn}`;
+      elements.HIRE_BTN.innerHTML = `<i class="fas fa-handshake"></i> ${t.hire}`;
     }
 
-    // ---------- Settings Functions ----------
+    // ========== SETTINGS FUNCTIONS ==========
     function applySettings(settings) {
       // Background effects
       const enableBg = settings.backgroundEnabled;
@@ -1883,6 +2150,14 @@ input:checked + .toggle-slider:before {
       // Animations toggle (for CSS animations)
       document.body.classList.toggle('no-animations', !enableAnimations || performanceMode || prefersReducedMotion);
       
+      // Auto-hide nav toggle
+      if (settings.autoHideEnabled) {
+        startAutoHideTimer();
+      } else {
+        clearTimeout(autoHideTimer);
+        elements.navToggle.classList.remove('auto-hide');
+      }
+      
       // Persist settings
       localStorage.setItem('settings', JSON.stringify(settings));
     }
@@ -1894,7 +2169,8 @@ input:checked + .toggle-slider:before {
           backgroundEnabled: true,
           animationsEnabled: true,
           backgroundTheme: 'aurora',
-          performanceMode: false
+          performanceMode: false,
+          autoHideEnabled: true
         };
         const settings = {...defaultSettings, ...savedSettings};
         
@@ -1905,11 +2181,12 @@ input:checked + .toggle-slider:before {
         tempSettings = {...settings};
         
         // Update modal UI
-        backgroundToggle.checked = settings.backgroundEnabled;
-        animationsToggle.checked = settings.animationsEnabled;
-        performanceToggle.checked = settings.performanceMode;
+        elements.backgroundToggle.checked = settings.backgroundEnabled;
+        elements.animationsToggle.checked = settings.animationsEnabled;
+        elements.performanceToggle.checked = settings.performanceMode;
+        elements.autoHideToggle.checked = settings.autoHideEnabled;
         
-        themeOptions.forEach(option => {
+        elements.themeOptions.forEach(option => {
           option.classList.toggle('active', option.dataset.theme === settings.backgroundTheme);
         });
       } catch (e) {
@@ -1919,66 +2196,33 @@ input:checked + .toggle-slider:before {
           backgroundEnabled: true,
           animationsEnabled: true,
           backgroundTheme: 'aurora',
-          performanceMode: false
+          performanceMode: false,
+          autoHideEnabled: true
         });
         loadSettings(); // re-run to update UI
       }
     }
     
     function updateModalUI(settings) {
-      backgroundToggle.checked = settings.backgroundEnabled;
-      animationsToggle.checked = settings.animationsEnabled;
-      performanceToggle.checked = settings.performanceMode;
+      elements.backgroundToggle.checked = settings.backgroundEnabled;
+      elements.animationsToggle.checked = settings.animationsEnabled;
+      elements.performanceToggle.checked = settings.performanceMode;
+      elements.autoHideToggle.checked = settings.autoHideEnabled;
       
-      themeOptions.forEach(option => {
+      elements.themeOptions.forEach(option => {
         option.classList.toggle('active', option.dataset.theme === settings.backgroundTheme);
       });
     }
 
-    function showNotification(message) {
-      notification.textContent = message;
-      notification.classList.add('show');
-      setTimeout(() => {
-        notification.classList.remove('show');
-      }, 3000);
+    function showNotification(message, isSuccess = true) {
+        elements.notification.innerHTML = `<i class="fas ${isSuccess ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${message}`;
+        elements.notification.classList.add('show');
+        setTimeout(() => {
+            elements.notification.classList.remove('show');
+        }, 3000);
     }
 
-
-    // ---------- Attach events ----------
-    btnId.addEventListener('click', ()=>setLang('id'));
-    btnEn.addEventListener('click', ()=>setLang('en'));
-
-    CTA_BTN.addEventListener('click', ()=> {
-      const txt = "CV - Vyr Lix\n\nEmail: hello@example.com\nProjects: SmartDecode (https://vyrina.github.io/smartdecode)";
-      const blob = new Blob([txt], {type:'text/plain'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = 'VyrLix_CV.txt';
-      document.body.appendChild(a); a.click();
-      a.remove(); URL.revokeObjectURL(url);
-    });
-
-    CONTACT_BTN.addEventListener('click', ()=> {
-      window.location.href = 'mailto:hello@example.com?subject=Hi%20Vyr';
-    });
-
-    HIRE_BTN.addEventListener('click', ()=> {
-      window.location.href = 'mailto:hello@example.com?subject=Hiring%20request';
-    });
-
-    document.getElementById('repo-btn').addEventListener('click', ()=> {
-      window.open('https://github.com/vyrina','_blank');
-    });
-
-    // keyboard language toggle (accessibility)
-    document.addEventListener('keydown', (e)=> {
-      if(e.altKey && e.key.toLowerCase()==='l'){
-        const cur = localStorage.getItem(persistKey) || detectLang();
-        setLang(cur === 'id' ? 'en' : 'id');
-      }
-    });
-
-    // MODIFIKASI: Animasi tombol naik
+    // ========== NAVIGATION FUNCTIONS ==========
     function getOffset(level) {
       const isDesktop = window.innerWidth > 480;
       if (level === 1) {
@@ -1987,235 +2231,345 @@ input:checked + .toggle-slider:before {
         return isDesktop ? '-180px' : '-220px';
       }
     }
+    
+    // Auto-hide logic for nav toggle button
+    let autoHideTimer;
+    const AUTO_HIDE_DELAY = 1500; // 3 seconds
 
-    navToggle.addEventListener('click', () => {
-      navToggle.classList.toggle('active');
-      navBar.classList.toggle('active');
+    function resetAutoHideTimer() {
+      if (!tempSettings.autoHideEnabled) return;
+      
+      clearTimeout(autoHideTimer);
+      elements.navToggle.classList.remove('auto-hide');
+      
+      setTimeout(startAutoHideTimer, 50);
+    }
 
-      if (navBar.classList.contains('active')) {
-        navToggle.style.transform = `translate(-50%, ${getOffset(1)})`;
-        navToggle.querySelector('i').className = 'fas fa-times';
+    function startAutoHideTimer() {
+      if (!tempSettings.autoHideEnabled) return;
+      
+      clearTimeout(autoHideTimer);
+      
+      if (!elements.navBar.classList.contains('active') && 
+          !elements.settingsModal.classList.contains('active') && 
+          !elements.shareModal.classList.contains('active')) {
+        autoHideTimer = setTimeout(() => {
+          elements.navToggle.classList.add('auto-hide');
+        }, AUTO_HIDE_DELAY);
+      }
+    }
+    
+    function resetMoreIcon() {
+      const icon = elements.navMore.querySelector('i');
+      icon.className = 'fas fa-ellipsis-h';
+      elements.navMore.classList.remove('active');
+    }
+
+    function closeNavMenu() {
+      elements.navToggle.classList.remove('active');
+      elements.navBar.classList.remove('active', 'expanded');
+      elements.navToggle.style.transform = 'translate(-50%, 0)';
+      elements.navToggle.querySelector('i').className = 'fas fa-bars';
+      resetMoreIcon();
+    }
+
+    // ========== EVENT HANDLERS ==========
+    function handleNavToggleClick() {
+      // Always reset the timer and button state on click
+      resetAutoHideTimer();
+      elements.navToggle.classList.toggle('active');
+      elements.navBar.classList.toggle('active');
+
+      if (elements.navBar.classList.contains('active')) {
+        elements.navToggle.style.transform = `translate(-50%, ${getOffset(1)})`;
+        elements.navToggle.querySelector('i').className = 'fas fa-times';
       } else {
-        navToggle.style.transform = 'translate(-50%, 0)';
-        navToggle.querySelector('i').className = 'fas fa-bars';
-        navBar.classList.remove('expanded');
+        elements.navToggle.style.transform = 'translate(-50%, 0)';
+        elements.navToggle.querySelector('i').className = 'fas fa-bars';
+        elements.navBar.classList.remove('expanded');
         resetMoreIcon();
       }
-    });
-
-    navMore.addEventListener('click', (e) => {
+    }
+    
+    function handleNavMoreClick(e) {
       e.preventDefault();
-      const isExpanded = navBar.classList.toggle('expanded');
+      const isExpanded = elements.navBar.classList.toggle('expanded');
       
       // Close main nav and toggle more button icon
       if (isExpanded) {
-        navToggle.classList.add('active');
-        navBar.classList.add('active');
-        navToggle.style.transform = `translate(-50%, ${getOffset(2)})`;
-        navMore.classList.add('active');
-        navMore.querySelector('i').className = 'fas fa-times';
+        elements.navToggle.classList.add('active');
+        elements.navBar.classList.add('active');
+        elements.navToggle.style.transform = `translate(-50%, ${getOffset(2)})`;
+        elements.navMore.classList.add('active');
+        elements.navMore.querySelector('i').className = 'fas fa-times';
       } else {
-        navToggle.style.transform = `translate(-50%, ${getOffset(1)})`;
-        navMore.classList.remove('active');
-        navMore.querySelector('i').className = 'fas fa-ellipsis-h';
+        elements.navToggle.style.transform = `translate(-50%, ${getOffset(1)})`;
+        elements.navMore.classList.remove('active');
+        elements.navMore.querySelector('i').className = 'fas fa-ellipsis-h';
       }
 
       // Ensure main toggle button reflects state correctly
-      if (navBar.classList.contains('active')) {
-        navToggle.querySelector('i').className = 'fas fa-times';
+      if (elements.navBar.classList.contains('active')) {
+        elements.navToggle.querySelector('i').className = 'fas fa-times';
       }
-    });
-
-    window.addEventListener('resize', () => {
-      if (navBar.classList.contains('active')) {
-        if (navBar.classList.contains('expanded')) {
-          navToggle.style.transform = `translate(-50%, ${getOffset(2)})`;
-        } else {
-          navToggle.style.transform = `translate(-50%, ${getOffset(1)})`;
-        }
-      } else {
-        navToggle.style.transform = 'translate(-50%, 0)';
-      }
-    });
-
-    document.addEventListener('click', (e) => {
-      if (navBar.classList.contains('active') && 
-          !navBar.contains(e.target) && 
-          !navToggle.contains(e.target) &&
-          !settingsModal.contains(e.target) &&
-          !shareModal.contains(e.target)) {
-        navToggle.classList.remove('active');
-        navBar.classList.remove('active', 'expanded');
-        navToggle.style.transform = 'translate(-50%, 0)';
-        navToggle.querySelector('i').className = 'fas fa-bars';
-        resetMoreIcon();
-      }
-    });
-
-    function resetMoreIcon() {
-      const icon = navMore.querySelector('i');
-      icon.className = 'fas fa-ellipsis-h';
-      navMore.classList.remove('active');
     }
-    
-    // Settings modal functions
-    settingsBtn.addEventListener('click', (e) => {
+
+    function handleOutsideClick(e) {
+      if (elements.navBar.classList.contains('active') && 
+          !elements.navBar.contains(e.target) && 
+          !elements.navToggle.contains(e.target) &&
+          !elements.settingsModal.contains(e.target) &&
+          !elements.shareModal.contains(e.target)) {
+        closeNavMenu();
+        startAutoHideTimer(); // Restart the timer when the menu is closed
+      }
+    }
+
+    function handleNavLinkClick(e) {
+      // Scroll to target
+      e.preventDefault();
+      const targetId = this.getAttribute('href');
+      if (targetId) {
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+      
+      closeNavMenu();
+    }
+
+    function handleSettingsBtnClick(e) {
       e.preventDefault();
       loadSettings();
-      settingsModal.classList.add('active');
-      
-      navToggle.classList.remove('active');
-      navBar.classList.remove('active', 'expanded');
-      navToggle.style.transform = 'translate(-50%, 0)';
-      navToggle.querySelector('i').className = 'fas fa-bars';
-      resetMoreIcon();
-    });
+      elements.settingsModal.classList.add('active');
+      closeNavMenu();
+    }
     
-    closeModal.addEventListener('click', () => {
-      settingsModal.classList.remove('active');
-    });
-    
-    settingsModal.addEventListener('click', (e) => {
-      if (e.target === settingsModal) {
-        settingsModal.classList.remove('active');
-      }
-    });
-    
-    // Handle changes in modal UI (update temp state)
-    backgroundToggle.addEventListener('change', (e) => {
-      tempSettings.backgroundEnabled = e.target.checked;
-    });
-    animationsToggle.addEventListener('change', (e) => {
-      tempSettings.animationsEnabled = e.target.checked;
-    });
-    performanceToggle.addEventListener('change', (e) => {
-      tempSettings.performanceMode = e.target.checked;
-    });
+    function handleShareBtnClick(e) {
+      e.preventDefault();
+      elements.shareModal.classList.add('active');
+      closeNavMenu();
+    }
 
-    themeOptions.forEach(option => {
-      option.addEventListener('click', () => {
-        tempSettings.backgroundTheme = option.dataset.theme;
+    function handleThemeOptionClick() {
+      tempSettings.backgroundTheme = this.dataset.theme;
+      updateModalUI(tempSettings);
+    }
+
+    function handleShareOptionClick(e) {
+      e.preventDefault();
+      const url = window.location.href;
+      const title = document.title;
+      const text = 'Check out Vyr Lix\'s creative portfolio!';
+
+      if (this.classList.contains('copy')) {
+          navigator.clipboard.writeText(url).then(() => {
+              showNotification('Link copied successfully!');
+          }).catch(err => {
+              console.error('Failed to copy: ', err);
+          });
+      } else if (this.id === 'shareTwitter') {
+          window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
+      } else if (this.id === 'shareLinkedIn') {
+          window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}&summary=${encodeURIComponent(text)}`, '_blank');
+      } else if (this.id === 'shareWhatsapp') {
+          window.open(`whatsapp://send?text=${encodeURIComponent(text + ' ' + url)}`);
+      } else if (this.id === 'shareTelegram') {
+          window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
+      } else if (this.id === 'shareNative' && navigator.share) {
+          navigator.share({
+              title: title,
+              text: text,
+              url: url,
+          }).catch(console.error);
+      }
+      
+      elements.shareModal.classList.remove('active');
+    }
+
+    function handleDownloadCv() {
+      const txt = "CV - Vyr Lix\n\nEmail: hello@example.com\nProjects: SmartDecode (https://vyrina.github.io/smartdecode)";
+      const blob = new Blob([txt], {type:'text/plain'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'VyrLix_CV.txt';
+      document.body.appendChild(a); a.click();
+      a.remove(); URL.revokeObjectURL(url);
+    }
+    
+    // ========== EMAILJS FORM SUBMISSION ==========
+    function handleContactFormSubmit(e) {
+        e.preventDefault();
+
+        // --- PENTING: Ganti dengan Service ID dan Template ID Anda dari EmailJS ---
+        const serviceID = 'YOUR_SERVICE_ID';
+        const templateID = 'YOUR_TEMPLATE_ID';
+        // --------------------------------------------------------------------
+
+        const submitBtn = elements.submitBtn;
+        const originalBtnHTML = submitBtn.innerHTML;
+
+        // Show loading state
+        submitBtn.disabled = true;
+        submitBtn.classList.add('is-loading');
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+        emailjs.sendForm(serviceID, templateID, this)
+            .then(() => {
+                showNotification('Message sent successfully!', true);
+                elements.contactForm.reset();
+            }, (err) => {
+                showNotification('Failed to send message. Please try again.', false);
+                console.error('EmailJS Error:', JSON.stringify(err));
+            })
+            .finally(() => {
+                // Reset button state
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('is-loading');
+                submitBtn.innerHTML = originalBtnHTML;
+            });
+    }
+
+    // ========== EVENT LISTENERS ==========
+    function setupEventListeners() {
+      // Language buttons
+      elements.btnId.addEventListener('click', () => setLang('id'));
+      elements.btnEn.addEventListener('click', () => setLang('en'));
+
+      // CTA buttons
+      elements.CTA_BTN.addEventListener('click', handleDownloadCv);
+      elements.CONTACT_BTN.addEventListener('click', () => {
+        $('#contact-form-section').scrollIntoView({ behavior: 'smooth' });
+      });
+      elements.HIRE_BTN.addEventListener('click', () => {
+        $('#contact-form-section').scrollIntoView({ behavior: 'smooth' });
+      });
+      $('#repo-btn').addEventListener('click', () => {
+        window.open('https://github.com/vyrina','_blank');
+      });
+
+      // Keyboard language toggle (accessibility)
+      document.addEventListener('keydown', (e) => {
+        if(e.altKey && e.key.toLowerCase()==='l'){
+          const cur = localStorage.getItem(persistKey) || detectLang();
+          setLang(cur === 'id' ? 'en' : 'id');
+        }
+      });
+
+      // Navigation
+      elements.navToggle.addEventListener('click', handleNavToggleClick);
+      elements.navMore.addEventListener('click', handleNavMoreClick);
+      document.addEventListener('click', handleOutsideClick);
+      
+      elements.navLinks.forEach(link => {
+        link.addEventListener('click', handleNavLinkClick);
+      });
+
+      // Settings modal
+      elements.settingsBtn.addEventListener('click', handleSettingsBtnClick);
+      elements.closeModal.addEventListener('click', () => {
+        elements.settingsModal.classList.remove('active');
+      });
+      elements.settingsModal.addEventListener('click', (e) => {
+        if (e.target === elements.settingsModal) {
+          elements.settingsModal.classList.remove('active');
+        }
+      });
+
+      // Handle changes in modal UI (update temp state)
+      elements.backgroundToggle.addEventListener('change', (e) => {
+        tempSettings.backgroundEnabled = e.target.checked;
+      });
+      elements.animationsToggle.addEventListener('change', (e) => {
+        tempSettings.animationsEnabled = e.target.checked;
+      });
+      elements.performanceToggle.addEventListener('change', (e) => {
+        tempSettings.performanceMode = e.target.checked;
+      });
+      elements.autoHideToggle.addEventListener('change', (e) => {
+        tempSettings.autoHideEnabled = e.target.checked;
+      });
+
+      elements.themeOptions.forEach(option => {
+        option.addEventListener('click', handleThemeOptionClick);
+      });
+
+      elements.saveBtn.addEventListener('click', () => {
+        applySettings(tempSettings);
+        elements.settingsModal.classList.remove('active');
+        showNotification('Settings saved!');
+      });
+
+      elements.resetBtn.addEventListener('click', () => {
+        const defaultSettings = {
+          backgroundEnabled: true,
+          animationsEnabled: true,
+          backgroundTheme: 'aurora',
+          performanceMode: false,
+          autoHideEnabled: true
+        };
+        tempSettings = {...defaultSettings};
         updateModalUI(tempSettings);
       });
-    });
-
-    saveBtn.addEventListener('click', () => {
-      applySettings(tempSettings);
-      settingsModal.classList.remove('active');
-      showNotification('Pengaturan disimpan!');
-    });
-
-    resetBtn.addEventListener('click', () => {
-      const defaultSettings = {
-        backgroundEnabled: true,
-        animationsEnabled: true,
-        backgroundTheme: 'aurora',
-        performanceMode: false
-      };
-      tempSettings = {...defaultSettings};
-      updateModalUI(tempSettings);
-    });
-    
-    // Nav links smooth scroll
-    const navLinks = document.querySelectorAll('.nav-link:not(.more)');
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            // Hapus baris ini untuk contact link
-            if (!link.classList.contains('contact-link')) {
-              e.preventDefault();
-              
-              const targetId = link.getAttribute('href');
-              if (targetId) {
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    targetElement.scrollIntoView({ behavior: 'smooth' });
-                }
-              }
-            }
-            
-            navToggle.classList.remove('active');
-            navBar.classList.remove('active', 'expanded');
-            navToggle.style.transform = 'translate(-50%, 0)';
-            navToggle.querySelector('i').className = 'fas fa-bars';
-            resetMoreIcon();
-        });
-    });
-    
-
-    const downloadCvExpanded = document.getElementById('downloadCvExpanded');
-    downloadCvExpanded.addEventListener('click', (e) => {
-      e.preventDefault();
-      // Logic download CV
-      CTA_BTN.click(); 
       
-      navToggle.classList.remove('active');
-      navBar.classList.remove('active', 'expanded');
-      navToggle.style.transform = 'translate(-50%, 0)';
-      navToggle.querySelector('i').className = 'fas fa-bars';
-      resetMoreIcon();
-    });
-
-    // Share Modal Logic
-    shareBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        shareModal.classList.add('active');
-        
-        navToggle.classList.remove('active');
-        navBar.classList.remove('active', 'expanded');
-        navToggle.style.transform = 'translate(-50%, 0)';
-        navToggle.querySelector('i').className = 'fas fa-bars';
-        resetMoreIcon();
-    });
-
-    closeShareModal.addEventListener('click', () => {
-        shareModal.classList.remove('active');
-    });
-
-    shareModal.addEventListener('click', (e) => {
-        if (e.target === shareModal) {
-            shareModal.classList.remove('active');
+      // Share modal
+      elements.shareBtn.addEventListener('click', handleShareBtnClick);
+      elements.closeShareModal.addEventListener('click', () => {
+        elements.shareModal.classList.remove('active');
+      });
+      elements.shareModal.addEventListener('click', (e) => {
+        if (e.target === elements.shareModal) {
+          elements.shareModal.classList.remove('active');
         }
-    });
+      });
 
-    shareOptions.forEach(option => {
-        option.addEventListener('click', (e) => {
-            e.preventDefault();
-            const url = window.location.href;
-            const title = document.title;
-            const text = 'Check out Vyr Lix\'s creative portfolio!';
+      elements.shareOptions.forEach(option => {
+        option.addEventListener('click', handleShareOptionClick);
+      });
 
-            if (option.classList.contains('copy')) {
-                navigator.clipboard.writeText(url).then(() => {
-                    showNotification('Link berhasil disalin!');
-                }).catch(err => {
-                    console.error('Failed to copy: ', err);
-                });
-            } else if (option.id === 'shareTwitter') {
-                window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
-            } else if (option.id === 'shareLinkedIn') {
-                window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}&summary=${encodeURIComponent(text)}`, '_blank');
-            } else if (option.id === 'shareWhatsapp') {
-                window.open(`whatsapp://send?text=${encodeURIComponent(text + ' ' + url)}`);
-            } else if (option.id === 'shareTelegram') {
-                window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
-            } else if (option.id === 'shareNative' && navigator.share) {
-                navigator.share({
-                    title: title,
-                    text: text,
-                    url: url,
-                }).catch(console.error);
-            }
-            
-            shareModal.classList.remove('active');
-        });
-    });
+      elements.downloadCvExpanded.addEventListener('click', (e) => {
+        e.preventDefault();
+        handleDownloadCv();
+        closeNavMenu();
+      });
 
-    // initialize
-    (function init(){
+      // Auto-hide functionality
+      document.addEventListener('mousemove', resetAutoHideTimer, { passive: true });
+      document.addEventListener('mousedown', resetAutoHideTimer, { passive: true });
+      document.addEventListener('touchstart', resetAutoHideTimer, { passive: true });
+      document.addEventListener('scroll', resetAutoHideTimer, { passive: true });
+      elements.navToggle.addEventListener('mouseenter', resetAutoHideTimer);
+      elements.navBar.addEventListener('mouseenter', resetAutoHideTimer);
+      
+      // Window resize
+      window.addEventListener('resize', () => {
+        if (elements.navBar.classList.contains('active')) {
+          if (elements.navBar.classList.contains('expanded')) {
+            elements.navToggle.style.transform = `translate(-50%, ${getOffset(2)})`;
+          } else {
+            elements.navToggle.style.transform = `translate(-50%, ${getOffset(1)})`;
+          }
+        } else {
+          elements.navToggle.style.transform = 'translate(-50%, 0)';
+        }
+      });
+      
+      // New Contact Form Listener
+      elements.contactForm.addEventListener('submit', handleContactFormSubmit);
+    }
+
+    // ========== INITIALIZATION ==========
+    function init(){
       const initial = detectLang();
       setLang(initial);
       loadSettings();
-    })();
+      setupEventListeners();
+      startAutoHideTimer();
+    }
+
+    // Start everything
+    init();
   </script>
 </body>
 </html>
