@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Vyr Lix — Creative Portfolio</title>
-  <meta name="description" content="Portfolio Vyr Lix — developer & designer.">
+  <title>Vyrina — Creative Portfolio</title>
+  <meta name="description" content="Portfolio Vyrina — developer & designer.">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
@@ -31,26 +31,24 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { 
-      height: 100%; 
-      overflow-x: hidden; 
-      scroll-behavior: smooth; 
-      background-color: var(--bg-2);
-    }
+    html {
+  scroll-behavior: smooth;
+  background-color: var(--bg-2);
+}
 
-    body {
-      color: #E6EEF8;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      line-height: 1.45;
-      padding: 28px 18px;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      font-size: 16px;
-      overflow-y: auto;
-      position: relative;
-    }
+body {
+  min-height: 100vh; /* biar isi bisa lebih panjang */
+  overflow-x: hidden; /* pindahkan ke sini */
+  overflow-y: auto;
+  color: #E6EEF8;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.45;
+  padding: 28px 18px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
 
     /* No animations class */
     .no-animations * {
@@ -522,15 +520,13 @@
       50%,100% { transform: translateX(150%); }
     }
     
-    /* ===== TEXT ANIMATION FIX ===== */
-    .text-animate { opacity: 0; transition: all 0.6s ease; }
-    .fade-in { opacity: 0; transform: translateY(20px); }
+    /* ===== One-time Text Animation ===== */
+    .text-animate { opacity: 0; }
+    .text-animate.visible { opacity: 1; transition: all 0.6s ease; }
+    
     .fade-in.visible { animation: fadeIn 0.6s ease-out forwards; }
-    .slide-left { opacity: 0; transform: translateX(-30px); }
     .slide-left.visible { animation: slideInLeft 0.6s ease-out forwards; }
-    .slide-right { opacity: 0; transform: translateX(30px); }
     .slide-right.visible { animation: slideInRight 0.6s ease-out forwards; }
-    .slide-up { opacity: 0; transform: translateY(20px); }
     .slide-up.visible { animation: slideUp 0.6s ease-out forwards; }
     @keyframes slideUp { from { opacity:0; transform: translateY(20px);} to { opacity:1; transform: translateY(0);} }
 
@@ -557,7 +553,6 @@
       100% { clip: rect(60px, 9999px, 70px, 0); }
     }
 
-    .bounce { opacity: 0; transform: scale(0.3); }
     .bounce.visible { animation: bounceIn 0.8s cubic-bezier(0.175,0.885,0.32,1.275) forwards; }
     @keyframes bounceIn {
       0% { opacity: 0; transform: scale(0.3); }
@@ -592,29 +587,37 @@
       transition: opacity 0.6s ease;
     }
     .gradient-reveal.visible { animation: gradientReveal 1.2s ease-out forwards, fadeIn 0.6s forwards; }
-    @keyframes gradientReveal { 0%{ background-size: 0% 100%; } 100%{ background-size: 100% 100%; } }
-
-    /* New CSS for project animation */
-    .project-animate {
-        opacity: 0;
-        transform: translateY(30px);
-        transition: opacity 0.6s ease-out, transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    .project-animate.is-visible {
-        opacity: 1;
-        transform: translateY(0);
+    
+    /* --- FIX DITAMBAHKAN DI SINI --- */
+    .gradient-reveal.is-visible { 
+      animation: gradientReveal 1.2s ease-out forwards; 
     }
     
-    .project.project-animate.is-visible:hover {
+    @keyframes gradientReveal { 0%{ background-size: 0% 100%; } 100%{ background-size: 100% 100%; } }
+
+    /* ===== Scroll-controlled Animations ===== */
+    .scroll-reveal {
+      opacity: 0;
+      transition: opacity 0.6s ease-out, transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .scroll-reveal.slide-up { transform: translateY(30px); }
+    .scroll-reveal.slide-left { transform: translateX(-30px); }
+    .scroll-reveal.slide-right { transform: translateX(30px); }
+    .scroll-reveal.fade-in { transform: none; } /* Fade-in has no transform offset */
+    .scroll-reveal.bounce { transform: scale(0.3); }
+
+    .scroll-reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0) translateX(0) scale(1);
+    }
+    
+    /* Project hover effect */
+    .project.scroll-reveal.is-visible:hover {
       transform: translateY(-8px) scale(1.02);
       transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    .project-animate.is-hidden {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    
     /* Project tags animation */
     .project-tags > * {
         opacity: 0;
@@ -691,6 +694,12 @@
 
     /* NEW: Auto-hide state for the hamburger button */
     .nav-toggle.auto-hide {
+      transform: translateX(-50%) scale(0.8) translateY(24px) !important;
+      opacity: 0.7;
+    }
+
+    /* MODIFIKASI BARU: State untuk Always Hide */
+    .nav-toggle.always-hidden {
       transform: translateX(-50%) scale(0.8) translateY(24px) !important;
       opacity: 0.7;
     }
@@ -1032,11 +1041,14 @@
       cursor: pointer;
       transition: all 0.3s ease;
       text-align: center;
+      font-size: 12px;
+      font-weight: 500;
     }
 
     .radio-option.active {
       background: rgba(96, 165, 250, 0.1);
       border-color: var(--primary);
+      color: white;
     }
 
     .radio-option:hover {
@@ -1203,9 +1215,9 @@
   <div class="wrap" role="main" id="home">
     <header aria-label="header">
       <div class="brand">
-        <div class="logo" aria-hidden="true">VL</div>
+        <div class="logo" aria-hidden="true">V</div>
         <div class="title">
-          <h1 id="brand-name" class="text-animate slide-left">Vyr Lix</h1>
+          <h1 id="brand-name" class="text-animate slide-left">Vyrina</h1>
           <p id="brand-sub" class="text-animate slide-left">Developer • Designer</p>
         </div>
       </div>
@@ -1221,9 +1233,9 @@
     <main>
       <aside class="card" aria-label="profil singkat">
         <div class="profile">
-          <div class="avatar" id="avatar">VL</div>
+          <div class="avatar" id="avatar">V</div>
           <div class="bio">
-            <h2 id="name" class="text-animate flip">Vyr Lix</h2>
+            <h2 id="name" class="text-animate flip">Vyrina</h2>
             <p id="role" class="text-animate slide-up">Fullstack Developer & UI/UX Enthusiast</p>
             <div class="badges" id="badges">
               <span class="badge text-animate slide-right"><i class="fas fa-code-branch"></i> Open Source</span>
@@ -1274,15 +1286,15 @@
             <div style="margin-top:12px">
               <strong id="portfolio-title" class="text-animate fade-in">Projects</strong>
               <div class="grid" id="projects-grid" style="margin-top:8px">
-                <article class="project project-animate is-hidden" aria-labelledby="proj1-title">
+                <article class="project scroll-reveal slide-up" aria-labelledby="proj1-title">
                   <div class="project-content">
                     <div class="project-icon" style="background: linear-gradient(135deg, rgba(110, 231, 183, 0.15), rgba(96, 165, 250, 0.15)); color: var(--secondary);">
                       <i class="fas fa-link"></i>
                     </div>
-                    <h4 id="proj1-title" class="project-animate is-hidden"><i class="fas fa-rocket" style="color: var(--secondary);"></i> SmartDecode</h4>
-                    <p id="proj1-desc" class="project-animate is-hidden">Tool untuk mendeteksi dan membuka link shortener & layanan hosting (contoh: Google Drive). Click untuk demo.</p>
+                    <h4 id="proj1-title" class="scroll-reveal slide-up"><i class="fas fa-rocket" style="color: var(--secondary);"></i> SmartDecode</h4>
+                    <p id="proj1-desc" class="scroll-reveal slide-up">Tool untuk mendeteksi dan membuka link shortener & layanan hosting (contoh: Google Drive). Click untuk demo.</p>
                     <div class="project-footer">
-                      <div class="project-tags project-animate is-hidden">
+                      <div class="project-tags scroll-reveal slide-up">
                         <span class="project-tag">JavaScript</span>
                         <span class="project-tag">API</span>
                         <span class="project-tag">Security</span>
@@ -1299,15 +1311,15 @@
                   </div>
                 </article>
 
-                <article class="project project-animate is-hidden" aria-labelledby="proj2-title">
+                <article class="project scroll-reveal slide-up" aria-labelledby="proj2-title">
                   <div class="project-content">
                     <div class="project-icon" style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(139, 92, 246, 0.15)); color: var(--pink);">
                       <i class="fas fa-paint-brush"></i>
                     </div>
-                    <h4 id="proj2-title" class="project-animate is-hidden"><i class="fas fa-palette" style="color: var(--pink);"></i> UI Motion Lab</h4>
-                    <p id="proj2-desc" class="project-animate is-hidden">Koleksi komponen UI animasi modern untuk website dan aplikasi mobile dengan dokumentasi lengkap.</p>
+                    <h4 id="proj2-title" class="scroll-reveal slide-up"><i class="fas fa-palette" style="color: var(--pink);"></i> UI Motion Lab</h4>
+                    <p id="proj2-desc" class="scroll-reveal slide-up">Koleksi komponen UI animasi modern untuk website dan aplikasi mobile dengan dokumentasi lengkap.</p>
                     <div class="project-footer">
-                      <div class="project-tags project-animate is-hidden">
+                      <div class="project-tags scroll-reveal slide-up">
                         <span class="project-tag">React</span>
                         <span class="project-tag">Framer Motion</span>
                         <span class="project-tag">UI/UX</span>
@@ -1324,15 +1336,15 @@
                   </div>
                 </article>
 
-                <article class="project project-animate is-hidden" aria-labelledby="proj3-title">
+                <article class="project scroll-reveal slide-up" aria-labelledby="proj3-title">
                   <div class="project-content">
                     <div class="project-icon" style="background: linear-gradient(135deg, rgba(167, 139, 250, 0.15), rgba(99, 102, 241, 0.15)); color: var(--purple);">
                       <i class="fas fa-bolt"></i>
                     </div>
-                    <h4 id="proj3-title" class="project-animate is-hidden"><i class="fas fa-tools" style="color: var(--purple);"></i> DevFlow Automator</h4>
-                    <p id="proj3-desc" class="project-animate is-hidden">Alat otomatisasi untuk mempercepat workflow developer dengan integrasi CI/CD và deployment.</p>
+                    <h4 id="proj3-title" class="scroll-reveal slide-up"><i class="fas fa-tools" style="color: var(--purple);"></i> DevFlow Automator</h4>
+                    <p id="proj3-desc" class="scroll-reveal slide-up">Alat otomatisasi untuk mempercepat workflow developer dengan integrasi CI/CD và deployment.</p>
                     <div class="project-footer">
-                      <div class="project-tags project-animate is-hidden">
+                      <div class="project-tags scroll-reveal slide-up">
                         <span class="project-tag">Python</span>
                         <span class="project-tag">Automation</span>
                         <span class="project-tag">DevOps</span>
@@ -1349,15 +1361,15 @@
                   </div>
                 </article>
 
-                <article class="project project-animate is-hidden" aria-labelledby="proj4-title">
+                <article class="project scroll-reveal slide-up" aria-labelledby="proj4-title">
                   <div class="project-content">
                     <div class="project-icon" style="background: linear-gradient(135deg, rgba(96, 165, 250, 0.15), rgba(236, 72, 153, 0.15)); color: var(--primary);">
                       <i class="fas fa-mobile-alt"></i>
                     </div>
-                    <h4 id="proj4-title" class="project-animate is-hidden"><i class="fas fa-lock" style="color: var(--primary);"></i> SecureChat</h4>
-                    <p id="proj4-desc" class="project-animate is-hidden">Aplikasi chat end-to-end encrypted dengan fitur penghancur pesan otomatis và verifikasi keamanan.</p>
+                    <h4 id="proj4-title" class="scroll-reveal slide-up"><i class="fas fa-lock" style="color: var(--primary);"></i> SecureChat</h4>
+                    <p id="proj4-desc" class="scroll-reveal slide-up">Aplikasi chat end-to-end encrypted dengan fitur penghancur pesan otomatis và verifikasi keamanan.</p>
                     <div class="project-footer">
-                      <div class="project-tags project-animate is-hidden">
+                      <div class="project-tags scroll-reveal slide-up">
                         <span class="project-tag">Android</span>
                         <span class="project-tag">Kotlin</span>
                         <span class="project-tag">Encryption</span>
@@ -1388,44 +1400,45 @@
         </div>
       </section>
 
-      <section class="contact-section text-animate slide-up" id="contact-form-section">
-        <h2 class="text-animate gradient-reveal">Get in Touch</h2>
-        <p class="subtitle text-animate fade-in">
+      <section class="contact-section scroll-reveal slide-up" id="contact-form-section">
+        <h2 class="scroll-reveal gradient-reveal">Get in Touch</h2>
+        <p class="subtitle scroll-reveal fade-in">
           Have a project in mind, or just want to say hi? Fill out the form below or find me on other platforms.
         </p>
         <form id="contact-form">
-          <div class="form-group text-animate slide-right">
+          <div class="form-group scroll-reveal slide-right">
             <label for="from_name">Your Name</label>
-            <input type="text" id="from_name" name="from_name" placeholder="John Doe" required>
+            <input type="text" id="from_name" name="name" placeholder="Stelle" required>
           </div>
-          <div class="form-group text-animate slide-left">
+          <div class="form-group scroll-reveal slide-left">
             <label for="from_email">Your Email</label>
-            <input type="email" id="from_email" name="from_email" placeholder="john.doe@example.com" required>
+            <input type="email" id="from_email" name="email" placeholder="Stelle@example.com" required>
           </div>
-          <div class="form-group full-width text-animate slide-up">
+          <div class="form-group full-width scroll-reveal slide-up">
             <label for="message">Your Message</label>
-            <textarea id="message" name="message" placeholder="Hi Vyr, let's talk about..." required></textarea>
+            <textarea id="message" name="message" placeholder="Hi babe, let's talk about..." required></textarea>
           </div>
-          <button type="submit" class="btn text-animate bounce" id="submit-btn">
+          <input type="hidden" name="site" id="site">
+          <button type="submit" class="btn scroll-reveal bounce" id="submit-btn">
             <i class="fas fa-paper-plane"></i> Send Message
           </button>
         </form>
 
-        <div class="socials-divider text-animate fade-in">
+        <div class="socials-divider scroll-reveal fade-in">
           Or find me on
         </div>
 
         <div class="social-links">
-          <a href="https://github.com/vyrina" target="_blank" rel="noopener" class="social-link github text-animate bounce" style="transition-delay: 0.1s;">
+          <a href="https://github.com/vyrina" target="_blank" rel="noopener" class="social-link github scroll-reveal bounce" style="transition-delay: 0.1s;">
             <i class="fab fa-github"></i>
           </a>
-          <a href="https://www.linkedin.com" target="_blank" rel="noopener" class="social-link linkedin text-animate bounce" style="transition-delay: 0.2s;">
+          <a href="https://www.linkedin.com" target="_blank" rel="noopener" class="social-link linkedin scroll-reveal bounce" style="transition-delay: 0.2s;">
             <i class="fab fa-linkedin-in"></i>
           </a>
-          <a href="https://twitter.com" target="_blank" rel="noopener" class="social-link twitter text-animate bounce" style="transition-delay: 0.3s;">
+          <a href="https://twitter.com" target="_blank" rel="noopener" class="social-link twitter scroll-reveal bounce" style="transition-delay: 0.3s;">
             <i class="fab fa-twitter"></i>
           </a>
-          <a href="https://t.me/" target="_blank" rel="noopener" class="social-link telegram text-animate bounce" style="transition-delay: 0.4s;">
+          <a href="https://t.me/" target="_blank" rel="noopener" class="social-link telegram scroll-reveal bounce" style="transition-delay: 0.4s;">
             <i class="fab fa-telegram-plane"></i>
           </a>
         </div>
@@ -1563,17 +1576,18 @@
             <span class="toggle-slider"></span>
           </label>
         </div>
-        <div class="setting-option">
+        <div class="setting-option" style="flex-direction: column; align-items: flex-start; gap: 12px;">
           <div class="setting-label">
-            <i class="fas fa-eye-slash"></i>
-            <span>Auto-hide navigation button</span>
+            <i class="fas fa-mouse-pointer"></i>
+            <span>Navigation Button</span>
           </div>
-          <label class="toggle-switch">
-            <input type="checkbox" id="autoHideToggle" checked>
-            <span class="toggle-slider"></span>
-          </label>
+          <div class="radio-group" style="width: 100%;" id="nav-visibility-options">
+            <div class="radio-option" data-value="visible">Visible</div>
+            <div class="radio-option active" data-value="auto-hide">Auto Hide</div>
+            <div class="radio-option" data-value="hidden">Always Hide</div>
+          </div>
         </div>
-      </div>
+        </div>
       
       <div class="modal-footer">
         <button class="modal-btn secondary" id="resetBtn">Reset Defaults</button>
@@ -1625,8 +1639,9 @@
   </script>
   <script type="text/javascript">
     (function(){
-        emailjs.init("YOUR_PUBLIC_KEY"); // <-- GANTI DENGAN PUBLIC KEY ANDA
+        emailjs.init("Roj5EFhl3hb9NaQum"); // <-- GANTI DENGAN PUBLIC KEY ANDA
     })();
+    document.getElementById("site").value = window.location.hostname;
   </script>
 
   <script>
@@ -1911,8 +1926,8 @@
       window.updateBackgroundState = updateBackgroundState;
     })();
 
-    // ========== SCROLL ANIMATIONS ==========
-    (function setupScrollAnimations(){
+    // ========== ONE-TIME SCROLL ANIMATIONS ==========
+    (function setupOneTimeAnimations(){
       const animateOnScroll = (elements) => {
         const observer = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
@@ -1929,14 +1944,13 @@
           }
         });
       };
-      // Make sure all elements with this class are observed, including the new ones
       animateOnScroll(document.querySelectorAll('.text-animate'));
     })();
     
-    // ========== PROJECT ANIMATIONS ==========
-    (function setupProjectAnimations(){
-        const projects = document.querySelectorAll('.project-animate');
-        if (projects.length === 0) return;
+    // ========== DYNAMIC SCROLL ANIMATIONS (projects & contact) ==========
+    (function setupDynamicAnimations(){
+        const animatedElements = document.querySelectorAll('.scroll-reveal');
+        if (animatedElements.length === 0) return;
         
         let lastScrollY = window.scrollY;
         
@@ -1954,55 +1968,30 @@
                 const element = entry.target;
 
                 if (entry.isIntersecting) {
-                    // Cek jika proyek utama sudah terlihat
-                    if (element.classList.contains('project')) {
-                        const title = element.querySelector('.project-title');
-                        const description = element.querySelector('.project-description');
-                        
-                        // Pastikan judul dan deskripsi sudah terlihat sebelum menampilkan tag
-                        if (title && description) {
-                            const titleRect = title.getBoundingClientRect();
-                            const descRect = description.getBoundingClientRect();
-                            
-                            // Menampilkan tag hanya jika judul dan deskripsi sudah terlihat
-                            if (titleRect.top < window.innerHeight && descRect.top < window.innerHeight) {
-                                const tags = element.querySelector('.project-tags');
-                                if (tags) {
-                                    tags.classList.add('is-visible');
-                                    tags.classList.remove('is-hidden');
-                                }
-                            }
-                        }
-                    }
-
                     element.classList.add('is-visible');
                     element.classList.remove('is-hidden');
-
+                    
                 } else {
-                    // Hanya hilangkan elemen saat scroll ke atas
-                    if (!isScrollingDown) {
-                        // Cek apakah elemen sudah di bagian atas viewport
-                        if (entry.boundingClientRect.top < 0) {
-                            // Do nothing
-                        } else {
-                            element.classList.add('is-hidden');
-                            element.classList.remove('is-visible');
-                            // Sembunyikan tag juga
-                            if (element.classList.contains('project')) {
-                                const tags = element.querySelector('.project-tags');
-                                if (tags) {
-                                    tags.classList.add('is-hidden');
-                                    tags.classList.remove('is-visible');
-                                }
-                            }
-                        }
+                    // Only hide elements when scrolling up and they are in the bottom part of the viewport
+                    if (!isScrollingDown && entry.boundingClientRect.top > 0) {
+                        element.classList.add('is-hidden');
+                        element.classList.remove('is-visible');
+                        
+                        // Hide project tags as well
+                        if (element.classList.contains('project')) {
+                             const tags = element.querySelector('.project-tags');
+                             if (tags) {
+                                 tags.classList.add('is-hidden');
+                                 tags.classList.remove('is-visible');
+                             }
+                         }
                     }
                 }
             });
         }, observerOptions);
 
-        projects.forEach(project => {
-            observer.observe(project);
+        animatedElements.forEach(el => {
+            observer.observe(el);
         });
     })();
 
@@ -2013,7 +2002,7 @@
         'role': 'Fullstack Developer & UI/UX Enthusiast',
         'contactTitle': 'Kontak',
         'skillsTitle': 'Keahlian',
-        'hello': 'Halo, saya Vyr',
+        'hello': 'Halo, saya Vyrina',
         'tagline': 'Saya membuat aplikasi dan antarmuka yang bersih, cepat, dan mudah digunakan.',
         'aboutText': 'Saya adalah pengembang web & mobile yang fokus pada pengalaman pengguna, performa, dan solusi yang dapat di-maintain. Saya suka bekerja dengan tools modern dan membuat produksi yang bersih.',
         'portfolioTitle': 'Proyek',
@@ -2032,7 +2021,7 @@
         'role': 'Fullstack Developer & UI/UX Enthusiast',
         'contactTitle': 'Contact',
         'skillsTitle': 'Skills',
-        'hello': 'Hi, I\'m Vyr',
+        'hello': 'Hi, I\'m Vyrina',
         'tagline': 'I build clean, fast and usable apps and interfaces.',
         'aboutText': 'I am a web & mobile developer focusing on user-experience, performance and maintainable solutions. I enjoy modern tooling and clean production-ready code.',
         'portfolioTitle': 'Projects',
@@ -2080,11 +2069,10 @@
       closeModal: $('#closeModal'),
       backgroundToggle: $('#backgroundToggle'),
       animationsToggle: $('#animationsToggle'),
-      themeOptions: $$('.radio-option'),
+      themeOptions: $$('#theme-options .radio-option'),
       saveBtn: $('#saveBtn'),
       resetBtn: $('#resetBtn'),
       performanceToggle: $('#performanceToggle'),
-      autoHideToggle: $('#autoHideToggle'),
       notification: $('#notification'),
       shareBtn: $('#shareBtn'),
       shareModal: $('#shareModal'),
@@ -2094,7 +2082,9 @@
       navLinks: $$('.nav-link:not(.more)'),
       // New elements for contact form
       contactForm: $('#contact-form'),
-      submitBtn: $('#submit-btn')
+      submitBtn: $('#submit-btn'),
+      // --- MODIFICATION: New element for nav visibility options ---
+      navVisibilityOptions: $$('#nav-visibility-options .radio-option')
     };
 
     // ========== LANGUAGE FUNCTIONS ==========
@@ -2150,13 +2140,26 @@
       // Animations toggle (for CSS animations)
       document.body.classList.toggle('no-animations', !enableAnimations || performanceMode || prefersReducedMotion);
       
-      // Auto-hide nav toggle
-      if (settings.autoHideEnabled) {
-        startAutoHideTimer();
-      } else {
-        clearTimeout(autoHideTimer);
-        elements.navToggle.classList.remove('auto-hide');
+      // --- MODIFICATION START: Updated Nav Button Logic ---
+      // Clear all possible states first
+      elements.navToggle.classList.remove('auto-hide', 'always-hidden');
+      clearTimeout(autoHideTimer);
+
+      switch (settings.navButtonVisibility) {
+        case 'auto-hide':
+          // The timer will be started by user activity
+          startAutoHideTimer();
+          break;
+        case 'hidden':
+          // For 'hidden', we treat it as always hidden
+          elements.navToggle.classList.add('always-hidden');
+          break;
+        case 'visible':
+        default:
+          // Do nothing, timers and classes are already cleared
+          break;
       }
+      // --- MODIFICATION END ---
       
       // Persist settings
       localStorage.setItem('settings', JSON.stringify(settings));
@@ -2164,42 +2167,31 @@
     
     function loadSettings() {
       try {
-        const savedSettings = JSON.parse(localStorage.getItem('settings'));
         const defaultSettings = {
           backgroundEnabled: true,
           animationsEnabled: true,
           backgroundTheme: 'aurora',
           performanceMode: false,
-          autoHideEnabled: true
+          // --- MODIFICATION: Updated setting name ---
+          navButtonVisibility: 'auto-hide' 
         };
+        const savedSettings = JSON.parse(localStorage.getItem('settings'));
         const settings = {...defaultSettings, ...savedSettings};
         
-        // Apply settings on load
         applySettings(settings);
-        
-        // Store current settings in temp state
         tempSettings = {...settings};
-        
-        // Update modal UI
-        elements.backgroundToggle.checked = settings.backgroundEnabled;
-        elements.animationsToggle.checked = settings.animationsEnabled;
-        elements.performanceToggle.checked = settings.performanceMode;
-        elements.autoHideToggle.checked = settings.autoHideEnabled;
-        
-        elements.themeOptions.forEach(option => {
-          option.classList.toggle('active', option.dataset.theme === settings.backgroundTheme);
-        });
+        updateModalUI(settings);
       } catch (e) {
         console.error("Failed to load settings:", e);
-        // Fallback to default
-        applySettings({
+        const defaultSettings = {
           backgroundEnabled: true,
           animationsEnabled: true,
           backgroundTheme: 'aurora',
           performanceMode: false,
-          autoHideEnabled: true
-        });
-        loadSettings(); // re-run to update UI
+          navButtonVisibility: 'auto-hide'
+        };
+        applySettings(defaultSettings);
+        loadSettings();
       }
     }
     
@@ -2207,10 +2199,14 @@
       elements.backgroundToggle.checked = settings.backgroundEnabled;
       elements.animationsToggle.checked = settings.animationsEnabled;
       elements.performanceToggle.checked = settings.performanceMode;
-      elements.autoHideToggle.checked = settings.autoHideEnabled;
       
       elements.themeOptions.forEach(option => {
         option.classList.toggle('active', option.dataset.theme === settings.backgroundTheme);
+      });
+      
+      // --- MODIFICATION: Update Nav Visibility radio buttons ---
+      elements.navVisibilityOptions.forEach(option => {
+          option.classList.toggle('active', option.dataset.value === settings.navButtonVisibility);
       });
     }
 
@@ -2234,10 +2230,11 @@
     
     // Auto-hide logic for nav toggle button
     let autoHideTimer;
-    const AUTO_HIDE_DELAY = 1500; // 3 seconds
+    const AUTO_HIDE_DELAY = 1500; // 1.5 seconds
 
     function resetAutoHideTimer() {
-      if (!tempSettings.autoHideEnabled) return;
+      // --- MODIFICATION: Check for the correct visibility modes ---
+      if (tempSettings.navButtonVisibility !== 'auto-hide') return;
       
       clearTimeout(autoHideTimer);
       elements.navToggle.classList.remove('auto-hide');
@@ -2246,7 +2243,8 @@
     }
 
     function startAutoHideTimer() {
-      if (!tempSettings.autoHideEnabled) return;
+      // --- MODIFICATION: Check for the correct visibility modes ---
+      if (tempSettings.navButtonVisibility !== 'auto-hide') return;
       
       clearTimeout(autoHideTimer);
       
@@ -2271,12 +2269,21 @@
       elements.navToggle.style.transform = 'translate(-50%, 0)';
       elements.navToggle.querySelector('i').className = 'fas fa-bars';
       resetMoreIcon();
+      
+      // --- MODIFICATION: Apply always-hidden class if needed ---
+      if (tempSettings.navButtonVisibility === 'hidden') {
+        elements.navToggle.classList.add('always-hidden');
+      }
     }
 
     // ========== EVENT HANDLERS ==========
     function handleNavToggleClick() {
       // Always reset the timer and button state on click
       resetAutoHideTimer();
+      
+      // Remove always-hidden class when clicked
+      elements.navToggle.classList.remove('always-hidden');
+      
       elements.navToggle.classList.toggle('active');
       elements.navBar.classList.toggle('active');
 
@@ -2288,6 +2295,13 @@
         elements.navToggle.querySelector('i').className = 'fas fa-bars';
         elements.navBar.classList.remove('expanded');
         resetMoreIcon();
+        
+        // Apply always-hidden class if needed
+        if (tempSettings.navButtonVisibility === 'hidden') {
+          setTimeout(() => {
+            elements.navToggle.classList.add('always-hidden');
+          }, 300);
+        }
       }
     }
     
@@ -2295,7 +2309,6 @@
       e.preventDefault();
       const isExpanded = elements.navBar.classList.toggle('expanded');
       
-      // Close main nav and toggle more button icon
       if (isExpanded) {
         elements.navToggle.classList.add('active');
         elements.navBar.classList.add('active');
@@ -2308,7 +2321,6 @@
         elements.navMore.querySelector('i').className = 'fas fa-ellipsis-h';
       }
 
-      // Ensure main toggle button reflects state correctly
       if (elements.navBar.classList.contains('active')) {
         elements.navToggle.querySelector('i').className = 'fas fa-times';
       }
@@ -2321,12 +2333,11 @@
           !elements.settingsModal.contains(e.target) &&
           !elements.shareModal.contains(e.target)) {
         closeNavMenu();
-        startAutoHideTimer(); // Restart the timer when the menu is closed
+        startAutoHideTimer();
       }
     }
 
     function handleNavLinkClick(e) {
-      // Scroll to target
       e.preventDefault();
       const targetId = this.getAttribute('href');
       if (targetId) {
@@ -2356,12 +2367,18 @@
       tempSettings.backgroundTheme = this.dataset.theme;
       updateModalUI(tempSettings);
     }
+    
+    // --- MODIFICATION: New handler for nav visibility radios ---
+    function handleNavVisibilityClick() {
+        tempSettings.navButtonVisibility = this.dataset.value;
+        updateModalUI(tempSettings);
+    }
 
     function handleShareOptionClick(e) {
       e.preventDefault();
       const url = window.location.href;
       const title = document.title;
-      const text = 'Check out Vyr Lix\'s creative portfolio!';
+      const text = 'Check out Vyrina\'s creative portfolio!';
 
       if (this.classList.contains('copy')) {
           navigator.clipboard.writeText(url).then(() => {
@@ -2389,7 +2406,7 @@
     }
 
     function handleDownloadCv() {
-      const txt = "CV - Vyr Lix\n\nEmail: hello@example.com\nProjects: SmartDecode (https://vyrina.github.io/smartdecode)";
+      const txt = "CV - Vyrina\n\nEmail: hello@example.com\nProjects: SmartDecode (https://vyrina.github.io/smartdecode)";
       const blob = new Blob([txt], {type:'text/plain'});
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -2403,14 +2420,13 @@
         e.preventDefault();
 
         // --- PENTING: Ganti dengan Service ID dan Template ID Anda dari EmailJS ---
-        const serviceID = 'YOUR_SERVICE_ID';
-        const templateID = 'YOUR_TEMPLATE_ID';
+        const serviceID = 'service_bcpqy4k';
+        const templateID = 'template_4v8yd3a';
         // --------------------------------------------------------------------
 
         const submitBtn = elements.submitBtn;
         const originalBtnHTML = submitBtn.innerHTML;
 
-        // Show loading state
         submitBtn.disabled = true;
         submitBtn.classList.add('is-loading');
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
@@ -2424,7 +2440,6 @@
                 console.error('EmailJS Error:', JSON.stringify(err));
             })
             .finally(() => {
-                // Reset button state
                 submitBtn.disabled = false;
                 submitBtn.classList.remove('is-loading');
                 submitBtn.innerHTML = originalBtnHTML;
@@ -2433,11 +2448,9 @@
 
     // ========== EVENT LISTENERS ==========
     function setupEventListeners() {
-      // Language buttons
       elements.btnId.addEventListener('click', () => setLang('id'));
       elements.btnEn.addEventListener('click', () => setLang('en'));
 
-      // CTA buttons
       elements.CTA_BTN.addEventListener('click', handleDownloadCv);
       elements.CONTACT_BTN.addEventListener('click', () => {
         $('#contact-form-section').scrollIntoView({ behavior: 'smooth' });
@@ -2449,7 +2462,6 @@
         window.open('https://github.com/vyrina','_blank');
       });
 
-      // Keyboard language toggle (accessibility)
       document.addEventListener('keydown', (e) => {
         if(e.altKey && e.key.toLowerCase()==='l'){
           const cur = localStorage.getItem(persistKey) || detectLang();
@@ -2457,7 +2469,6 @@
         }
       });
 
-      // Navigation
       elements.navToggle.addEventListener('click', handleNavToggleClick);
       elements.navMore.addEventListener('click', handleNavMoreClick);
       document.addEventListener('click', handleOutsideClick);
@@ -2466,7 +2477,6 @@
         link.addEventListener('click', handleNavLinkClick);
       });
 
-      // Settings modal
       elements.settingsBtn.addEventListener('click', handleSettingsBtnClick);
       elements.closeModal.addEventListener('click', () => {
         elements.settingsModal.classList.remove('active');
@@ -2477,7 +2487,6 @@
         }
       });
 
-      // Handle changes in modal UI (update temp state)
       elements.backgroundToggle.addEventListener('change', (e) => {
         tempSettings.backgroundEnabled = e.target.checked;
       });
@@ -2487,12 +2496,14 @@
       elements.performanceToggle.addEventListener('change', (e) => {
         tempSettings.performanceMode = e.target.checked;
       });
-      elements.autoHideToggle.addEventListener('change', (e) => {
-        tempSettings.autoHideEnabled = e.target.checked;
-      });
-
+      
       elements.themeOptions.forEach(option => {
         option.addEventListener('click', handleThemeOptionClick);
+      });
+      
+      // --- MODIFICATION: Add listeners for new radio buttons ---
+      elements.navVisibilityOptions.forEach(option => {
+        option.addEventListener('click', handleNavVisibilityClick);
       });
 
       elements.saveBtn.addEventListener('click', () => {
@@ -2507,13 +2518,13 @@
           animationsEnabled: true,
           backgroundTheme: 'aurora',
           performanceMode: false,
-          autoHideEnabled: true
+          // --- MODIFICATION: Update reset default ---
+          navButtonVisibility: 'auto-hide'
         };
         tempSettings = {...defaultSettings};
         updateModalUI(tempSettings);
       });
       
-      // Share modal
       elements.shareBtn.addEventListener('click', handleShareBtnClick);
       elements.closeShareModal.addEventListener('click', () => {
         elements.shareModal.classList.remove('active');
@@ -2534,7 +2545,6 @@
         closeNavMenu();
       });
 
-      // Auto-hide functionality
       document.addEventListener('mousemove', resetAutoHideTimer, { passive: true });
       document.addEventListener('mousedown', resetAutoHideTimer, { passive: true });
       document.addEventListener('touchstart', resetAutoHideTimer, { passive: true });
@@ -2542,7 +2552,6 @@
       elements.navToggle.addEventListener('mouseenter', resetAutoHideTimer);
       elements.navBar.addEventListener('mouseenter', resetAutoHideTimer);
       
-      // Window resize
       window.addEventListener('resize', () => {
         if (elements.navBar.classList.contains('active')) {
           if (elements.navBar.classList.contains('expanded')) {
@@ -2555,7 +2564,6 @@
         }
       });
       
-      // New Contact Form Listener
       elements.contactForm.addEventListener('submit', handleContactFormSubmit);
     }
 
