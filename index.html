@@ -32,23 +32,23 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html {
-  scroll-behavior: smooth;
-  background-color: var(--bg-2);
-}
+      scroll-behavior: smooth;
+      background-color: var(--bg-2);
+    }
 
-body {
-  min-height: 100vh; /* biar isi bisa lebih panjang */
-  overflow-x: hidden; /* pindahkan ke sini */
-  overflow-y: auto;
-  color: #E6EEF8;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  line-height: 1.45;
-  padding: 28px 18px;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      overflow-y: auto;
+      color: #E6EEF8;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.45;
+      padding: 28px 18px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
 
     /* No animations class */
     .no-animations * {
@@ -57,7 +57,6 @@ body {
     }
 
     /* ========== BACKGROUND STYLES ========== */
-    /* Modern, performant background layers (canvas) */
     #bg-orbs, #bg-stars, #bg-particles-canvas {
       position: fixed;
       inset: 0;
@@ -69,7 +68,6 @@ body {
     #bg-stars { z-index: 1; }
     #bg-particles-canvas { z-index: 0; }
 
-    /* Subtle aurora sheen (GPU-friendly) */
     .aurora {
       position: fixed;
       inset: -10%;
@@ -83,7 +81,6 @@ body {
       opacity: 0.7;
     }
     
-    /* THEME STYLES */
     .theme-aurora .aurora { display: block; }
     .theme-aurora #bg-orbs { display: block; }
     .theme-aurora #bg-stars { display: block; }
@@ -94,7 +91,6 @@ body {
     .theme-gradient #bg-orbs { display: none; }
     .theme-gradient #bg-stars { display: none; }
 
-    /* Theme-specific background gradients */
     .theme-gradient body {
       background: linear-gradient(135deg, #1d2538, #0e121a);
     }
@@ -146,7 +142,6 @@ body {
 
     .brand { display: flex; gap: 12px; align-items: center; }
 
-    /* Square logo */
     .logo {
       width: 52px;
       height: 52px;
@@ -176,7 +171,6 @@ body {
 
     .controls { display: flex; gap: 10px; align-items: center; }
 
-    /* language toggle */
     .lang-toggle {
       display: flex; gap: 8px; align-items: center;
       background: var(--glass);
@@ -193,10 +187,8 @@ body {
       color: #021022; box-shadow: 0 6px 16px rgba(14, 165, 164, 0.12);
     }
 
-    /* main content grid */
     main { display: grid; grid-template-columns: 320px 1fr; gap: 20px; }
 
-    /* left column */
     .card {
       background: var(--card);
       border-radius: var(--radius);
@@ -208,7 +200,6 @@ body {
     }
     .profile { display: flex; gap: 16px; align-items: center; }
 
-    /* Square avatar */
     .avatar {
       width: 72px; height: 72px; border-radius: 14px;
       background: linear-gradient(180deg, #111827, #0b1220);
@@ -253,7 +244,6 @@ body {
       border: 1px solid var(--primary);
     }
 
-    /* right column */
     .hero {
       background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
       border-radius: 14px;
@@ -268,6 +258,7 @@ body {
 
     .about {
       display: grid; grid-template-columns: 1fr 180px; gap: 12px; align-items: start;
+      margin-bottom: 40px;
     }
     .about p { font-size: 14px; color: var(--muted); }
 
@@ -289,22 +280,84 @@ body {
     .btn:hover::after { opacity: 1; }
     .btn.secondary { background: transparent; color: var(--muted); border: 1px solid var(--glass-border); }
     .btn.secondary:hover { background: rgba(255, 255, 255, 0.05); color: #fff; border-color: var(--primary); }
-
-    /* portfolio grid */
-    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 8px; }
-    .project {
+    
+    /* ========== NEW: SLIDER / CAROUSEL STYLES ========== */
+    .content-switcher {
+      display: flex;
+      gap: 8px;
+      background: var(--glass);
+      padding: 6px;
+      border-radius: 12px;
+      border: 1px solid var(--glass-border);
+      margin-bottom: 16px;
+      align-self: flex-start;
+    }
+    .switcher-btn {
+      /* PENTING: Tambahkan flex-basis dan flex-grow untuk lebar simetris */
+      flex-basis: 0;
+      flex-grow: 1;
+      
+      padding: 8px 12px;
+      border-radius: 9px;
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: center;
+      flex-direction: row;
+    }
+    .switcher-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+    .switcher-btn.active {
+      background: linear-gradient(90deg, #6ee7b7, #60a5fa);
+      color: #021022;
+      box-shadow: 0 6px 16px rgba(96, 165, 250, 0.12);
+    }
+    
+    .slider-viewport {
+      overflow: hidden;
+      width: 100%;
+      transition: height 0.3s ease; /* Transisi untuk perubahan tinggi */
+    }
+    .slider-track {
+      display: flex;
+      width: 300%; /* 3 panels */
+      transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+      cursor: grab;
+    }
+    .slider-track.is-dragging {
+      cursor: grabbing;
+    }
+    .slider-panel {
+      width: calc(100% / 3); /* Each panel takes up 1/3 of the track's width */
+      flex-shrink: 0;
+      padding: 2px; /* Small padding to prevent content clipping */
+    }
+    
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    
+    .project, .cert-card, .exp-card {
       border-radius: 12px; padding: 16px;
       background: linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent);
       border: 1px solid var(--glass-border);
-      display: flex; flex-direction: column; gap: 10px; position: relative; overflow: hidden; cursor: pointer;
+      display: flex; flex-direction: column; gap: 10px; position: relative; overflow: hidden;
       transform-origin: center; min-height: 220px;
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    .project:hover {
+    .project:hover, .cert-card:hover, .exp-card:hover {
       transform: translateY(-8px) scale(1.02);
       box-shadow: 0 12px 30px rgba(2, 6, 23, 0.8);
       border-color: rgba(96, 165, 250, 0.3);
     }
+    
     .project-content { display: flex; flex-direction: column; gap: 10px; position: relative; z-index: 1; }
     .project-icon {
       width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; font-size: 24px;
@@ -319,7 +372,7 @@ body {
       display: flex; gap: 6px; height: 0; opacity: 0; overflow: hidden; transition: all 0.4s ease; margin-top: 0;
     }
     .project:hover .project-actions { height: 32px; opacity: 1; margin-top: 6px; }
-
+    
     .action-btn {
       flex: 1; display: flex; align-items: center; justify-content: center; gap: 4px;
       padding: 6px 8px; border-radius: 8px; font-size: 11px; font-weight: 600; text-decoration: none; transition: all 0.3s ease; text-align: center;
@@ -327,7 +380,68 @@ body {
     .demo-btn { background: linear-gradient(90deg, #6ee7b7, #60a5fa); color: #041024; }
     .github-btn { background: rgba(255, 255, 255, 0.1); color: #E6EEF8; border: 1px solid rgba(255, 255, 255, 0.1); }
     .demo-btn:hover, .github-btn:hover { transform: translateY(-3px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); }
-
+    
+    /* NEW Certificate & Experience Card Styles */
+    .cert-card, .exp-card {
+      text-decoration: none;
+      color: inherit;
+    }
+    .cert-header, .exp-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .cert-icon, .exp-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+    }
+    .cert-info h4, .exp-info h4 { font-size: 15px; margin-bottom: 2px; }
+    .cert-info p, .exp-info p { font-size: 12px; color: var(--muted); }
+    .cert-body, .exp-body {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .exp-body ul {
+      list-style-type: none;
+      padding-left: 0;
+      margin-top: 8px;
+    }
+    .exp-body li {
+      padding-left: 1.2em;
+      position: relative;
+      margin-bottom: 4px;
+    }
+    .exp-body li::before {
+      content: '\f00c'; /* FontAwesome check icon */
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      position: absolute;
+      left: 0;
+      color: var(--secondary);
+      font-size: 12px;
+    }
+    .card-footer {
+      margin-top: auto;
+      padding-top: 10px;
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--glass-border);
+    }
+    .card-footer .tag {
+      padding: 3px 7px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+    
     /* skills */
     .skills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
     .skill {
@@ -342,14 +456,13 @@ body {
     .skill:hover { color: #fff; transform: translateY(-3px); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); }
     .skill:hover::before { transform: scaleX(1); }
 
-    /* Sidebar section */
     .sidebar-section { padding-left: 12px; }
     .sidebar-buttons { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
     .sidebar-btn { width: 100%; text-align: center; }
 
     /* ========== NEW CONTACT SECTION STYLES ========== */
     .contact-section {
-      grid-column: 1 / -1; /* Make it span full width in the main grid */
+      grid-column: 1 / -1;
       background: var(--card);
       border-radius: var(--radius);
       padding: 24px 28px;
@@ -386,6 +499,7 @@ body {
     }
     .form-group.full-width {
       grid-column: 1 / -1;
+      min-height: 140px;
     }
     #contact-form label {
       font-size: 13px;
@@ -426,7 +540,6 @@ body {
       cursor: not-allowed;
     }
 
-    /* Modifikasi untuk garis "Or find me on" */
     .socials-divider {
       margin-top: 24px;
       text-align: center;
@@ -441,7 +554,7 @@ body {
       content: '';
       position: absolute;
       top: 50%;
-      width: 40%; /* Atur lebar garis */
+      width: 40%;
       height: 1px;
       background: var(--glass-border);
     }
@@ -485,12 +598,49 @@ body {
       border-color: var(--primary);
       box-shadow: 0 6px 12px rgba(0,0,0,0.2);
     }
-    /* Animasi warna ikon saat hover */
     .social-link.github:hover { color: #fff; }
     .social-link.linkedin:hover { color: #0077b5; }
     .social-link.twitter:hover { color: #1da1f2; }
     .social-link.telegram:hover { color: #0088cc; }
 
+    /* ========== COPYRIGHT STYLES ========== */
+    .copyright {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 20px 0;
+      margin-top: 30px;
+      color: var(--muted);
+      font-size: 14px;
+      border-top: 1px solid var(--glass-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .copyright-text {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .copyright-signature {
+      font-family: 'Dancing Script', cursive;
+      font-size: 18px;
+      background: linear-gradient(90deg, var(--secondary), var(--primary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-left: 4px;
+      font-weight: 700;
+    }
+    
+    .copyright-year {
+      color: var(--primary);
+      font-weight: 600;
+    }
 
     /* ========== ANIMATIONS ========== */
     @keyframes float {
@@ -520,7 +670,6 @@ body {
       50%,100% { transform: translateX(150%); }
     }
     
-    /* ===== One-time Text Animation ===== */
     .text-animate { opacity: 0; }
     .text-animate.visible { opacity: 1; transition: all 0.6s ease; }
     
@@ -588,14 +737,12 @@ body {
     }
     .gradient-reveal.visible { animation: gradientReveal 1.2s ease-out forwards, fadeIn 0.6s forwards; }
     
-    /* --- FIX DITAMBAHKAN DI SINI --- */
     .gradient-reveal.is-visible { 
       animation: gradientReveal 1.2s ease-out forwards; 
     }
     
     @keyframes gradientReveal { 0%{ background-size: 0% 100%; } 100%{ background-size: 100% 100%; } }
 
-    /* ===== Scroll-controlled Animations ===== */
     .scroll-reveal {
       opacity: 0;
       transition: opacity 0.6s ease-out, transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -604,7 +751,7 @@ body {
     .scroll-reveal.slide-up { transform: translateY(30px); }
     .scroll-reveal.slide-left { transform: translateX(-30px); }
     .scroll-reveal.slide-right { transform: translateX(30px); }
-    .scroll-reveal.fade-in { transform: none; } /* Fade-in has no transform offset */
+    .scroll-reveal.fade-in { transform: none; }
     .scroll-reveal.bounce { transform: scale(0.3); }
 
     .scroll-reveal.is-visible {
@@ -612,13 +759,11 @@ body {
       transform: translateY(0) translateX(0) scale(1);
     }
     
-    /* Project hover effect */
     .project.scroll-reveal.is-visible:hover {
       transform: translateY(-8px) scale(1.02);
       transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    /* Project tags animation */
     .project-tags > * {
         opacity: 0;
         transform: translateY(10px);
@@ -662,7 +807,6 @@ body {
       max-width: 500px;
     }
 
-    /* MODIFIKASI: Tombol di tengah dengan animasi naik */
     .nav-toggle {
       position: absolute;
       bottom: 0;
@@ -692,19 +836,16 @@ body {
       transform: rotate(90deg);
     }
 
-    /* NEW: Auto-hide state for the hamburger button */
     .nav-toggle.auto-hide {
       transform: translateX(-50%) scale(0.8) translateY(24px) !important;
       opacity: 0.7;
     }
 
-    /* MODIFIKASI BARU: State untuk Always Hide */
     .nav-toggle.always-hidden {
       transform: translateX(-50%) scale(0.8) translateY(24px) !important;
       opacity: 0.7;
     }
 
-    /* Kotak navbar */
     .nav-bar {
       position: absolute;
       bottom: 0;
@@ -714,14 +855,10 @@ body {
       border-radius: 24px;
       border: 1px solid var(--glass-border);
       box-shadow: 0 8px 30px rgba(2, 6, 23, 0.8);
-
-      /* Awal: hanya setinggi nav-links */
       max-height: 90px;
       opacity: 0;
       transform: translateY(100%);
       pointer-events: none;
-
-      /* Transisi smooth buka-tutup */
       transition:
         max-height 0.6s ease,
         padding 0.6s ease,
@@ -731,14 +868,12 @@ body {
       z-index: 1001;
     }
 
-    /* Saat navbar dibuka */
     .nav-bar.active {
       opacity: 1;
       transform: translateY(0);
       pointer-events: auto;
     }
 
-    /* Kontainer link utama */
     .nav-links {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -746,7 +881,6 @@ body {
       gap: 8px;
     }
 
-    /* Link utama */
     .nav-link {
       display: flex;
       flex-direction: column;
@@ -779,7 +913,6 @@ body {
       font-weight: 500;
     }
 
-    /* Menu tambahan (hidden awal) */
     .nav-expanded {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -794,9 +927,9 @@ body {
         padding 0.4s ease;
     }
 
-    /* Saat expanded aktif */
     .nav-bar.expanded {
-      max-height: 280px; /* cukup untuk nav-links + expanded */
+      max-height: 280px;
+      overflow-y: auto;
     }
 
     .nav-bar.active.expanded .nav-expanded {
@@ -805,7 +938,6 @@ body {
       padding: 16px;
     }
 
-    /* Item di expanded */
     .expanded-link {
       display: flex;
       align-items: center;
@@ -835,7 +967,6 @@ body {
       font-weight: 500;
     }
 
-    /* Animasi per item */
     .nav-bar.active.expanded .expanded-link {
       transform: translateY(0);
       opacity: 1;
@@ -847,7 +978,6 @@ body {
     .nav-bar.active.expanded .expanded-link:nth-child(5) { transition-delay: 0.3s; }
     .nav-bar.active.expanded .expanded-link:nth-child(6) { transition-delay: 0.35s; }
 
-    /* Efek pada tombol More saat aktif */
     .nav-link.more.active {
       background: rgba(255, 255, 255, 0.08);
       color: white;
@@ -892,8 +1022,6 @@ body {
       position: relative;
       transform: translateY(30px);
       transition: transform 0.4s ease;
-
-      /* Tambahkan scroll untuk konten modal */
       max-height: 90vh;
       overflow-y: auto;
     }
@@ -910,9 +1038,8 @@ body {
       margin-bottom: 24px;
       padding-bottom: 16px;
       border-bottom: 1px solid var(--glass-border);
-      /* Pastikan header tidak ikut discroll */
       position: sticky;
-      top: -24px; /* offset untuk padding */
+      top: -24px;
       background: inherit;
       z-index: 1;
     }
@@ -965,7 +1092,6 @@ body {
       padding: 12px 0;
       border-bottom: 1px solid var(--glass-border);
     }
-    /* Hapus border-bottom pada elemen terakhir */
     .setting-group > .setting-option:last-of-type {
       border-bottom: none;
     }
@@ -977,7 +1103,6 @@ body {
       font-size: 14px;
     }
 
-    /* Custom toggle switch */
     .toggle-switch {
       position: relative;
       display: inline-block;
@@ -1025,7 +1150,6 @@ body {
       background-color: white;
     }
 
-    /* Radio buttons */
     .radio-group {
       display: flex;
       gap: 12px;
@@ -1066,7 +1190,6 @@ body {
       font-size: 12px;
     }
 
-    /* Modal footer buttons */
     .modal-footer {
       display: flex;
       gap: 12px;
@@ -1105,7 +1228,6 @@ body {
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
-    /* Share options */
     .share-options {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -1149,10 +1271,9 @@ body {
     .share-option.whatsapp i { color: #25d366; }
     .share-option.telegram i { color: #0088cc; }
 
-    /* Notification Pop-up */
     .notification {
       position: fixed;
-      bottom: 120px; /* Di atas navbar */
+      bottom: 120px;
       left: 50%;
       transform: translateX(-50%);
       background: rgba(255, 255, 255, 0.1);
@@ -1203,8 +1324,32 @@ body {
       .nav-links { grid-template-columns: repeat(4, 1fr); }
       .nav-expanded { grid-template-columns: repeat(2, 1fr); }
       .contact-section { padding: 20px; }
+      .copyright {
+        font-size: 12px;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .copyright-text {
+        gap: 4px;
+      }
+      .content-switcher {
+        flex-wrap: wrap; /* Allow buttons to wrap on small screens */
+      }
+      /* Perbaikan untuk tombol switcher */
+      .switcher-btn {
+        flex-direction: column;
+        gap: 4px;
+        padding: 8px;
+        flex-grow: 1;
+        justify-content: center;
+        align-items: center;
+      }
+      .switcher-btn i {
+        margin-bottom: 0;
+      }
     }
   </style>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <canvas id="bg-orbs" aria-hidden="true"></canvas>
@@ -1268,7 +1413,7 @@ body {
       <section class="hero" aria-label="konten utama">
         <div class="headline">
           <div>
-            <h3 id="hello" class="text-animate gradient-reveal">Halo, saya Vyr</h3>
+            <h3 id="hello" class="text-animate gradient-reveal">Halo, saya Vyrina</h3>
             <p id="tagline" class="text-animate slide-left">Saya membuat aplikasi dan antarmuka yang bersih, cepat, dan mudah digunakan.</p>
           </div>
           <div class="cta">
@@ -1280,114 +1425,220 @@ body {
         <div class="about">
           <div>
             <p id="about-text" class="text-animate fade-in">
-              Saya adalah pengembang web & mobile yang fokus pada pengalaman pengguna, performa, dan solusi yang dapat di-maintain.
-              Saya suka bekerja dengan tools modern dan membuat produksi yang bersih.
             </p>
             <div style="margin-top:12px">
-              <strong id="portfolio-title" class="text-animate fade-in">Projects</strong>
-              <div class="grid" id="projects-grid" style="margin-top:8px">
-                <article class="project scroll-reveal slide-up" aria-labelledby="proj1-title">
-                  <div class="project-content">
-                    <div class="project-icon" style="background: linear-gradient(135deg, rgba(110, 231, 183, 0.15), rgba(96, 165, 250, 0.15)); color: var(--secondary);">
-                      <i class="fas fa-link"></i>
-                    </div>
-                    <h4 id="proj1-title" class="scroll-reveal slide-up"><i class="fas fa-rocket" style="color: var(--secondary);"></i> SmartDecode</h4>
-                    <p id="proj1-desc" class="scroll-reveal slide-up">Tool untuk mendeteksi dan membuka link shortener & layanan hosting (contoh: Google Drive). Click untuk demo.</p>
-                    <div class="project-footer">
-                      <div class="project-tags scroll-reveal slide-up">
-                        <span class="project-tag">JavaScript</span>
-                        <span class="project-tag">API</span>
-                        <span class="project-tag">Security</span>
-                      </div>
-                      <div class="project-actions">
-                        <a href="https://vyrina.github.io/smartdecode" target="_blank" rel="noopener" class="action-btn demo-btn">
-                          <i class="fas fa-play-circle"></i> Live Demo
-                        </a>
-                        <a href="https://github.com/vyrina/smartdecode" target="_blank" rel="noopener" class="action-btn github-btn">
-                          <i class="fab fa-github"></i> GitHub
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </article>
+              <div class="content-switcher text-animate fade-in">
+                <button class="switcher-btn active" data-index="0">
+                  <i class="fas fa-folder-open"></i> <span id="switcher-projects">Projects</span>
+                </button>
+                <button class="switcher-btn" data-index="1">
+                  <i class="fas fa-certificate"></i> <span id="switcher-certs">Certificates</span>
+                </button>
+                <button class="switcher-btn" data-index="2">
+                  <i class="fas fa-briefcase"></i> <span id="switcher-exp">Experience</span>
+                </button>
+              </div>
 
-                <article class="project scroll-reveal slide-up" aria-labelledby="proj2-title">
-                  <div class="project-content">
-                    <div class="project-icon" style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(139, 92, 246, 0.15)); color: var(--pink);">
-                      <i class="fas fa-paint-brush"></i>
-                    </div>
-                    <h4 id="proj2-title" class="scroll-reveal slide-up"><i class="fas fa-palette" style="color: var(--pink);"></i> UI Motion Lab</h4>
-                    <p id="proj2-desc" class="scroll-reveal slide-up">Koleksi komponen UI animasi modern untuk website dan aplikasi mobile dengan dokumentasi lengkap.</p>
-                    <div class="project-footer">
-                      <div class="project-tags scroll-reveal slide-up">
-                        <span class="project-tag">React</span>
-                        <span class="project-tag">Framer Motion</span>
-                        <span class="project-tag">UI/UX</span>
-                      </div>
-                      <div class="project-actions">
-                        <a href="#" class="action-btn demo-btn">
-                          <i class="fas fa-play-circle"></i> Live Demo
-                        </a>
-                        <a href="#" class="action-btn github-btn">
-                          <i class="fab fa-github"></i> GitHub
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </article>
+              <div class="slider-viewport" id="slider-viewport">
+                <div class="slider-track" id="slider-track">
+                  <div class="slider-panel" id="panel-projects">
+                    <div class="grid" id="projects-grid">
+                       <article class="project scroll-reveal slide-up" aria-labelledby="proj1-title">
+                        <div class="project-content">
+                          <div class="project-icon" style="background: linear-gradient(135deg, rgba(110, 231, 183, 0.15), rgba(96, 165, 250, 0.15)); color: var(--secondary);">
+                            <i class="fas fa-link"></i>
+                          </div>
+                          <h4 id="proj1-title" class="scroll-reveal slide-up"><i class="fas fa-rocket" style="color: var(--secondary);"></i> SmartDecode</h4>
+                          <p id="proj1-desc" class="scroll-reveal slide-up"></p>
+                          <div class="project-footer">
+                            <div class="project-tags scroll-reveal slide-up">
+                              <span class="project-tag">JavaScript</span>
+                              <span class="project-tag">API</span>
+                              <span class="project-tag">Security</span>
+                            </div>
+                            <div class="project-actions">
+                              <a href="https://vyrina.github.io/smartdecode" target="_blank" rel="noopener" class="action-btn demo-btn">
+                                <i class="fas fa-play-circle"></i> Live Demo
+                              </a>
+                              <a href="https://github.com/vyrina/smartdecode" target="_blank" rel="noopener" class="action-btn github-btn">
+                                <i class="fab fa-github"></i> GitHub
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </article>
 
-                <article class="project scroll-reveal slide-up" aria-labelledby="proj3-title">
-                  <div class="project-content">
-                    <div class="project-icon" style="background: linear-gradient(135deg, rgba(167, 139, 250, 0.15), rgba(99, 102, 241, 0.15)); color: var(--purple);">
-                      <i class="fas fa-bolt"></i>
-                    </div>
-                    <h4 id="proj3-title" class="scroll-reveal slide-up"><i class="fas fa-tools" style="color: var(--purple);"></i> DevFlow Automator</h4>
-                    <p id="proj3-desc" class="scroll-reveal slide-up">Alat otomatisasi untuk mempercepat workflow developer dengan integrasi CI/CD và deployment.</p>
-                    <div class="project-footer">
-                      <div class="project-tags scroll-reveal slide-up">
-                        <span class="project-tag">Python</span>
-                        <span class="project-tag">Automation</span>
-                        <span class="project-tag">DevOps</span>
-                      </div>
-                      <div class="project-actions">
-                        <a href="#" class="action-btn demo-btn">
-                          <i class="fas fa-play-circle"></i> Live Demo
-                        </a>
-                        <a href="#" class="action-btn github-btn">
-                          <i class="fab fa-github"></i> GitHub
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </article>
+                      <article class="project scroll-reveal slide-up" aria-labelledby="proj2-title">
+                        <div class="project-content">
+                          <div class="project-icon" style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(139, 92, 246, 0.15)); color: var(--pink);">
+                            <i class="fas fa-paint-brush"></i>
+                          </div>
+                          <h4 id="proj2-title" class="scroll-reveal slide-up"><i class="fas fa-palette" style="color: var(--pink);"></i> UI Motion Lab</h4>
+                          <p id="proj2-desc" class="scroll-reveal slide-up">Koleksi komponen UI animasi modern untuk website dan aplikasi mobile dengan dokumentasi lengkap.</p>
+                          <div class="project-footer">
+                            <div class="project-tags scroll-reveal slide-up">
+                              <span class="project-tag">React</span>
+                              <span class="project-tag">Framer Motion</span>
+                              <span class="project-tag">UI/UX</span>
+                            </div>
+                            <div class="project-actions">
+                              <a href="#" class="action-btn demo-btn">
+                                <i class="fas fa-play-circle"></i> Live Demo
+                              </a>
+                              <a href="#" class="action-btn github-btn">
+                                <i class="fab fa-github"></i> GitHub
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </article>
 
-                <article class="project scroll-reveal slide-up" aria-labelledby="proj4-title">
-                  <div class="project-content">
-                    <div class="project-icon" style="background: linear-gradient(135deg, rgba(96, 165, 250, 0.15), rgba(236, 72, 153, 0.15)); color: var(--primary);">
-                      <i class="fas fa-mobile-alt"></i>
-                    </div>
-                    <h4 id="proj4-title" class="scroll-reveal slide-up"><i class="fas fa-lock" style="color: var(--primary);"></i> SecureChat</h4>
-                    <p id="proj4-desc" class="scroll-reveal slide-up">Aplikasi chat end-to-end encrypted dengan fitur penghancur pesan otomatis và verifikasi keamanan.</p>
-                    <div class="project-footer">
-                      <div class="project-tags scroll-reveal slide-up">
-                        <span class="project-tag">Android</span>
-                        <span class="project-tag">Kotlin</span>
-                        <span class="project-tag">Encryption</span>
-                      </div>
-                      <div class="project-actions">
-                        <a href="#" class="action-btn demo-btn">
-                          <i class="fas fa-play-circle"></i> Live Demo
-                        </a>
-                        <a href="#" class="action-btn github-btn">
-                          <i class="fab fa-github"></i> GitHub
-                        </a>
-                      </div>
+                      <article class="project scroll-reveal slide-up" aria-labelledby="proj3-title">
+                        <div class="project-content">
+                          <div class="project-icon" style="background: linear-gradient(135deg, rgba(167, 139, 250, 0.15), rgba(99, 102, 241, 0.15)); color: var(--purple);">
+                            <i class="fas fa-bolt"></i>
+                          </div>
+                          <h4 id="proj3-title" class="scroll-reveal slide-up"><i class="fas fa-tools" style="color: var(--purple);"></i> DevFlow Automator</h4>
+                          <p id="proj3-desc" class="scroll-reveal slide-up">Alat otomatisasi untuk mempercepat workflow developer dengan integrasi CI/CD và deployment.</p>
+                          <div class="project-footer">
+                            <div class="project-tags scroll-reveal slide-up">
+                              <span class="project-tag">Python</span>
+                              <span class="project-tag">Automation</span>
+                              <span class="project-tag">DevOps</span>
+                            </div>
+                            <div class="project-actions">
+                              <a href="#" class="action-btn demo-btn">
+                                <i class="fas fa-play-circle"></i> Live Demo
+                              </a>
+                              <a href="#" class="action-btn github-btn">
+                                <i class="fab fa-github"></i> GitHub
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </article>
+
+                      <article class="project scroll-reveal slide-up" aria-labelledby="proj4-title">
+                        <div class="project-content">
+                          <div class="project-icon" style="background: linear-gradient(135deg, rgba(96, 165, 250, 0.15), rgba(236, 72, 153, 0.15)); color: var(--primary);">
+                            <i class="fas fa-mobile-alt"></i>
+                          </div>
+                          <h4 id="proj4-title" class="scroll-reveal slide-up"><i class="fas fa-lock" style="color: var(--primary);"></i> SecureChat</h4>
+                          <p id="proj4-desc" class="scroll-reveal slide-up">Aplikasi chat end-to-end encrypted dengan fitur penghancur pesan otomatis và verifikasi keamanan.</p>
+                          <div class="project-footer">
+                            <div class="project-tags scroll-reveal slide-up">
+                              <span class="project-tag">Android</span>
+                              <span class="project-tag">Kotlin</span>
+                              <span class="project-tag">Encryption</span>
+                            </div>
+                            <div class="project-actions">
+                              <a href="#" class="action-btn demo-btn">
+                                <i class="fas fa-play-circle"></i> Live Demo
+                              </a>
+                              <a href="#" class="action-btn github-btn">
+                                <i class="fab fa-github"></i> GitHub
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </article>
                     </div>
                   </div>
-                </article>
+
+                  <div class="slider-panel" id="panel-certificates">
+                    <div class="grid">
+                      <a href="#" class="cert-card scroll-reveal slide-up" target="_blank" rel="noopener">
+                        <div class="cert-header">
+                          <div class="cert-icon" style="background: rgba(236, 72, 153, 0.1); color: var(--pink);">
+                            <i class="fab fa-aws"></i>
+                          </div>
+                          <div class="cert-info">
+                            <h4>AWS Certified Cloud Practitioner</h4>
+                            <p>Amazon Web Services</p>
+                          </div>
+                        </div>
+                        <div class="cert-body">
+                          Demonstrates foundational knowledge of AWS Cloud concepts, services, and terminology.
+                        </div>
+                        <div class="card-footer">
+                          <span>Issued: Aug 2024</span>
+                          <span class="tag" style="background: rgba(236, 72, 153, 0.1); color: var(--pink);">Cloud</span>
+                        </div>
+                      </a>
+
+                      <a href="#" class="cert-card scroll-reveal slide-up" target="_blank" rel="noopener">
+                        <div class="cert-header">
+                           <div class="cert-icon" style="background: rgba(96, 165, 250, 0.1); color: var(--primary);">
+                            <i class="fab fa-react"></i>
+                          </div>
+                          <div class="cert-info">
+                            <h4>Advanced React Development</h4>
+                            <p>Meta Careers</p>
+                          </div>
+                        </div>
+                        <div class="cert-body">
+                         Covers advanced topics including state management with Redux, performance optimization, and modern hooks.
+                        </div>
+                        <div class="card-footer">
+                          <span>Issued: May 2024</span>
+                          <span class="tag" style="background: rgba(96, 165, 250, 0.1); color: var(--primary);">Frontend</span>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                  
+                  <div class="slider-panel" id="panel-experience">
+                     <div class="grid">
+                       <article class="exp-card scroll-reveal slide-up">
+                        <div class="exp-header">
+                          <div class="exp-icon" style="background: rgba(110, 231, 183, 0.1); color: var(--secondary);">
+                            <i class="fas fa-building"></i>
+                          </div>
+                          <div class="exp-info">
+                            <h4>Fullstack Developer</h4>
+                            <p>Tech Solutions Inc.</p>
+                          </div>
+                        </div>
+                        <div class="exp-body">
+                         <ul>
+                           <li>Developed and maintained client-facing web applications using the MERN stack.</li>
+                           <li>Improved API response times by 30% through query optimization.</li>
+                           <li>Collaborated with the UI/UX team to implement responsive designs.</li>
+                         </ul>
+                        </div>
+                        <div class="card-footer">
+                          <span>2022 - Present</span>
+                          <span class="tag" style="background: rgba(110, 231, 183, 0.1); color: var(--secondary);">Full-time</span>
+                        </div>
+                      </article>
+                       <article class="exp-card scroll-reveal slide-up">
+                        <div class="exp-header">
+                          <div class="exp-icon" style="background: rgba(167, 139, 250, 0.1); color: var(--purple);">
+                           <i class="fas fa-graduation-cap"></i>
+                          </div>
+                          <div class="exp-info">
+                            <h4>Junior Web Developer (Intern)</h4>
+                            <p>Digital Creators Co.</p>
+                          </div>
+                        </div>
+                        <div class="exp-body">
+                          <ul>
+                            <li>Assisted in building WordPress themes and plugins for various clients.</li>
+                            <li>Gained hands-on experience with version control (Git) and agile methodologies.</li>
+                           </ul>
+                        </div>
+                        <div class="card-footer">
+                          <span>2021 - 2022</span>
+                           <span class="tag" style="background: rgba(167, 139, 250, 0.1); color: var(--purple);">Internship</span>
+                        </div>
+                      </article>
+                    </div>
+                  </div>
+                  
+                </div>
               </div>
             </div>
-          </div>
+            </div>
 
           <aside class="sidebar-section" id="contact">
             <div style="font-weight:700;margin-bottom:8px" id="side-title" class="text-animate color-shift">Let's build</div>
@@ -1443,6 +1694,11 @@ body {
           </a>
         </div>
       </section>
+
+      <footer class="copyright scroll-reveal fade-in" id="copyright">
+        <div class="copyright-text" id="copyright-text">
+          </div>
+      </footer>
       </main>
   </div>
   
@@ -1457,8 +1713,7 @@ body {
             <i class="fas fa-home"></i>
             <span>Home</span>
           </a>
-          <a href="#projects-grid" class="nav-link project-link">
-            <i class="fas fa-folder"></i>
+          <a href="#panel-projects" class="nav-link project-link"> <i class="fas fa-folder"></i>
             <span>Projects</span>
           </a>
           <a href="#contact-form-section" class="nav-link contact-link">
@@ -1686,7 +1941,6 @@ body {
       window.addEventListener('resize', resizeCanvas, { passive: true });
       resizeCanvas();
 
-      // --------- Aurora Orbs (very lightweight) ---------
       const ORB_COUNT = isMobile ? 3 : W > 1200 ? 5 : 4;
       const orbs = [];
       function initOrbs(){
@@ -1731,7 +1985,6 @@ body {
         orbCtx.globalCompositeOperation = 'source-over';
       }
 
-      // --------- Stars (constellation-lite, parallax) ---------
       const BASE_STARS = isMobile ? 40 : W > 1400 ? 100 : W > 1024 ? 80 : 60;
       const stars = [];
       let parallax = { x: 0, y: 0 }, targetParallax = { x: 0, y: 0 };
@@ -1792,7 +2045,6 @@ body {
         starCtx.globalAlpha = 1;
       }
       
-      // --------- Unik & Modern Particles (Canvas) ---------
       const PARTICLE_COUNT = isMobile ? 60 : 150;
       const particles = [];
       function initParticles() {
@@ -1824,7 +2076,6 @@ body {
             p.opacity += (p.targetOpacity * (0.5 + 0.5 * Math.sin(time*0.0005 + p.phase)) - p.opacity) * 0.05;
 
             if (p.x < 0 || p.x > W || p.y < 0 || p.y > H) {
-              // Reset particle when it goes out of bounds
               p.x = Math.random() * W;
               p.y = Math.random() * H;
               p.vx = (Math.random() - 0.5) * 0.3;
@@ -1840,15 +2091,13 @@ body {
       }
 
       function updateBackgroundState(theme, enableBg, enableAnimations) {
-        // Toggle body classes for different themes
         document.body.classList.remove('theme-aurora', 'theme-particles', 'theme-gradient');
         if (enableBg) {
           document.body.classList.add(`theme-${theme}`);
         } else {
-          document.body.classList.add('theme-gradient'); // Fallback to gradient if disabled
+          document.body.classList.add('theme-gradient');
         }
         
-        // Handle canvas and aurora visibility
         if (enableBg) {
           aurora.style.display = 'none';
           orbCanvas.style.display = 'none';
@@ -1869,13 +2118,11 @@ body {
           particlesCanvas.style.display = 'none';
         }
 
-        // Handle animations
         prefersReduced = !enableAnimations;
         if(enableAnimations && enableBg){
           startAnimationLoop();
         } else {
           stopAnimationLoop();
-          // Draw a single static frame if background is enabled but animations are off
           if(enableBg){
             if(theme === 'aurora') {
               drawOrbs();
@@ -1901,7 +2148,6 @@ body {
       function frame(t){
         if(!running) return;
         
-        // Cek tema yang aktif dan hanya jalankan fungsi yang relevan
         if(document.body.classList.contains('theme-aurora')) {
           drawOrbs();
           drawStars(t);
@@ -1972,12 +2218,10 @@ body {
                     element.classList.remove('is-hidden');
                     
                 } else {
-                    // Only hide elements when scrolling up and they are in the bottom part of the viewport
                     if (!isScrollingDown && entry.boundingClientRect.top > 0) {
                         element.classList.add('is-hidden');
                         element.classList.remove('is-visible');
                         
-                        // Hide project tags as well
                         if (element.classList.contains('project')) {
                              const tags = element.querySelector('.project-tags');
                              if (tags) {
@@ -2005,7 +2249,9 @@ body {
         'hello': 'Halo, saya Vyrina',
         'tagline': 'Saya membuat aplikasi dan antarmuka yang bersih, cepat, dan mudah digunakan.',
         'aboutText': 'Saya adalah pengembang web & mobile yang fokus pada pengalaman pengguna, performa, dan solusi yang dapat di-maintain. Saya suka bekerja dengan tools modern dan membuat produksi yang bersih.',
-        'portfolioTitle': 'Proyek',
+        'switcherProjects': 'Proyek',
+        'switcherCerts': 'Sertifikat',
+        'switcherExp': 'Pengalaman',
         'proj1Title': 'SmartDecode',
         'proj1Desc': 'Tool untuk mendeteksi dan membuka link shortener & layanan hosting (contoh: Google Drive). Klik untuk demo.',
         'sideTitle': "Let's build",
@@ -2014,7 +2260,7 @@ body {
         'contactBtn': 'Kontak',
         'hire': 'Hire Me',
         'seeGithub': 'Lihat GitHub',
-        'yearSuffix': ''
+        'copyrightText': `&copy; <span class="copyright-year">${new Date().getFullYear()}</span> <span class="copyright-signature">Vyrina</span>. Hak cipta dilindungi.`
       },
       en: {
         'brandSub': 'Developer • Designer',
@@ -2024,7 +2270,9 @@ body {
         'hello': 'Hi, I\'m Vyrina',
         'tagline': 'I build clean, fast and usable apps and interfaces.',
         'aboutText': 'I am a web & mobile developer focusing on user-experience, performance and maintainable solutions. I enjoy modern tooling and clean production-ready code.',
-        'portfolioTitle': 'Projects',
+        'switcherProjects': 'Projects',
+        'switcherCerts': 'Certificates',
+        'switcherExp': 'Experience',
         'proj1Title': 'SmartDecode',
         'proj1Desc': 'A tool to detect and resolve URL shorteners & hosting services (example: Google Drive). Click to demo.',
         'sideTitle': "Let's build",
@@ -2033,7 +2281,7 @@ body {
         'contactBtn': 'Contact',
         'hire': 'Hire Me',
         'seeGithub': 'See GitHub',
-        'yearSuffix': ''
+        'copyrightText': `&copy; <span class="copyright-year">${new Date().getFullYear()}</span> <span class="copyright-signature">Vyrina</span>. All rights reserved.`
       }
     };
 
@@ -2053,7 +2301,9 @@ body {
       HELLO: $('#hello'),
       TAGLINE: $('#tagline'),
       ABOUT_TEXT: $('#about-text'),
-      PORTF_TITLE: $('#portfolio-title'),
+      SWITCHER_PROJ: $('#switcher-projects'),
+      SWITCHER_CERTS: $('#switcher-certs'),
+      SWITCHER_EXP: $('#switcher-exp'),
       PROJ1_TITLE: $('#proj1-title'),
       PROJ1_DESC: $('#proj1-desc'),
       SIDE_TITLE: $('#side-title'),
@@ -2080,11 +2330,13 @@ body {
       shareOptions: $$('.share-option'),
       downloadCvExpanded: $('#downloadCvExpanded'),
       navLinks: $$('.nav-link:not(.more)'),
-      // New elements for contact form
       contactForm: $('#contact-form'),
       submitBtn: $('#submit-btn'),
-      // --- MODIFICATION: New element for nav visibility options ---
-      navVisibilityOptions: $$('#nav-visibility-options .radio-option')
+      copyrightText: $('#copyright-text'),
+      navVisibilityOptions: $$('#nav-visibility-options .radio-option'),
+      sliderViewport: $('#slider-viewport'),
+      sliderTrack: $('#slider-track'),
+      sliderPanels: $$('.slider-panel')
     };
 
     // ========== LANGUAGE FUNCTIONS ==========
@@ -2116,7 +2368,9 @@ body {
       elements.HELLO.textContent = t.hello;
       elements.TAGLINE.textContent = t.tagline;
       elements.ABOUT_TEXT.textContent = t.aboutText;
-      elements.PORTF_TITLE.textContent = t.portfolioTitle;
+      elements.SWITCHER_PROJ.textContent = t.switcherProjects;
+      elements.SWITCHER_CERTS.textContent = t.switcherCerts;
+      elements.SWITCHER_EXP.textContent = t.switcherExp;
       elements.PROJ1_TITLE.textContent = t.proj1Title;
       elements.PROJ1_DESC.textContent = t.proj1Desc;
       elements.SIDE_TITLE.textContent = t.sideTitle;
@@ -2124,11 +2378,11 @@ body {
       elements.CTA_BTN.innerHTML = `<i class="fas fa-download"></i> ${t.cta}`;
       elements.CONTACT_BTN.innerHTML = `<i class="fas fa-envelope"></i> ${t.contactBtn}`;
       elements.HIRE_BTN.innerHTML = `<i class="fas fa-handshake"></i> ${t.hire}`;
+      elements.copyrightText.innerHTML = t.copyrightText;
     }
 
     // ========== SETTINGS FUNCTIONS ==========
     function applySettings(settings) {
-      // Background effects
       const enableBg = settings.backgroundEnabled;
       const theme = settings.backgroundTheme;
       const enableAnimations = settings.animationsEnabled;
@@ -2137,31 +2391,23 @@ body {
       
       window.updateBackgroundState(theme, enableBg, enableAnimations && !prefersReducedMotion && !performanceMode);
       
-      // Animations toggle (for CSS animations)
       document.body.classList.toggle('no-animations', !enableAnimations || performanceMode || prefersReducedMotion);
       
-      // --- MODIFICATION START: Updated Nav Button Logic ---
-      // Clear all possible states first
       elements.navToggle.classList.remove('auto-hide', 'always-hidden');
       clearTimeout(autoHideTimer);
 
       switch (settings.navButtonVisibility) {
         case 'auto-hide':
-          // The timer will be started by user activity
           startAutoHideTimer();
           break;
         case 'hidden':
-          // For 'hidden', we treat it as always hidden
           elements.navToggle.classList.add('always-hidden');
           break;
         case 'visible':
         default:
-          // Do nothing, timers and classes are already cleared
           break;
       }
-      // --- MODIFICATION END ---
       
-      // Persist settings
       localStorage.setItem('settings', JSON.stringify(settings));
     }
     
@@ -2172,7 +2418,6 @@ body {
           animationsEnabled: true,
           backgroundTheme: 'aurora',
           performanceMode: false,
-          // --- MODIFICATION: Updated setting name ---
           navButtonVisibility: 'auto-hide' 
         };
         const savedSettings = JSON.parse(localStorage.getItem('settings'));
@@ -2204,7 +2449,6 @@ body {
         option.classList.toggle('active', option.dataset.theme === settings.backgroundTheme);
       });
       
-      // --- MODIFICATION: Update Nav Visibility radio buttons ---
       elements.navVisibilityOptions.forEach(option => {
           option.classList.toggle('active', option.dataset.value === settings.navButtonVisibility);
       });
@@ -2217,35 +2461,162 @@ body {
             elements.notification.classList.remove('show');
         }, 3000);
     }
+    
+    // ========== SLIDER / CAROUSEL SYSTEM ==========
+    (function setupSlider() {
+      const switcherBtns = $$('.switcher-btn');
+      const sliderTrack = $('.slider-track');
+      const sliderViewport = $('.slider-viewport');
+      const sliderPanels = $$('.slider-panel');
+      const numPanels = sliderPanels.length;
+      
+      let currentIndex = 0;
+      let isDragging = false;
+      let startPos = 0;
+      let currentTranslate = 0;
+      let prevTranslate = 0;
+      let animationID = 0;
+
+      // Fungsi untuk menyesuaikan tinggi berdasarkan konten
+      function adjustHeight() {
+        const activePanel = sliderPanels[currentIndex];
+        const activeContent = activePanel.querySelector('.grid');
+        const height = activeContent ? activeContent.scrollHeight : 0;
+        
+        // Tambahkan padding untuk ruang ekstra
+        const extraPadding = 20;
+        sliderViewport.style.height = (height + extraPadding) + 'px';
+        
+        // Atur juga tinggi track untuk memastikan konsistensi
+        sliderTrack.style.height = (height + extraPadding) + 'px';
+      }
+
+      function goToPanel(index) {
+        if (index < 0 || index >= numPanels) return;
+      
+        currentIndex = index;
+      
+        const panelWidth = sliderTrack.offsetWidth / numPanels;
+        const offsetPx = -currentIndex * panelWidth;
+      
+        sliderTrack.style.transform = `translateX(${offsetPx}px)`;
+      
+        switcherBtns.forEach(btn => {
+          btn.classList.toggle('active', parseInt(btn.dataset.index) === currentIndex);
+        });
+      
+        prevTranslate = offsetPx;
+        currentTranslate = offsetPx;
+      
+        // Panggil adjustHeight setelah perubahan panel
+        requestAnimationFrame(adjustHeight);
+      }
+
+      switcherBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          goToPanel(parseInt(btn.dataset.index));
+        });
+      });
+
+      // Touch and Mouse Events
+      sliderTrack.addEventListener('mousedown', dragStart);
+      sliderTrack.addEventListener('touchstart', dragStart, { passive: true });
+
+      sliderTrack.addEventListener('mouseup', dragEnd);
+      sliderTrack.addEventListener('mouseleave', dragEnd);
+      sliderTrack.addEventListener('touchend', dragEnd);
+
+      sliderTrack.addEventListener('mousemove', dragMove);
+      sliderTrack.addEventListener('touchmove', dragMove, { passive: true });
+
+      function dragStart(event) {
+        isDragging = true;
+        startPos = getPositionX(event);
+        sliderTrack.classList.add('is-dragging');
+        sliderTrack.style.transition = 'none';
+        animationID = requestAnimationFrame(animation);
+      }
+
+      function dragMove(event) {
+        if (isDragging) {
+          const currentPosition = getPositionX(event);
+          currentTranslate = prevTranslate + currentPosition - startPos;
+        }
+      }
+
+      function dragEnd() {
+        if (!isDragging) return;
+        isDragging = false;
+        cancelAnimationFrame(animationID);
+        
+        sliderTrack.classList.remove('is-dragging');
+        sliderTrack.style.transition = '';
+
+        const movedBy = currentTranslate - prevTranslate;
+        const panelWidth = sliderTrack.offsetWidth / numPanels;
+
+        if (movedBy < -panelWidth / 4 && currentIndex < numPanels - 1) {
+          currentIndex += 1;
+        }
+        if (movedBy > panelWidth / 4 && currentIndex > 0) {
+          currentIndex -= 1;
+        }
+        
+        goToPanel(currentIndex);
+        
+        currentTranslate = -currentIndex * panelWidth;
+        prevTranslate = currentTranslate;
+      }
+      
+      function getPositionX(event) {
+        return event.type.includes('mouse') ? event.pageX : event.touches[0].clientX;
+      }
+
+      function animation() {
+        if (isDragging) {
+          const offset = currentTranslate;
+          sliderTrack.style.transform = `translateX(${offset}px)`;
+          requestAnimationFrame(animation);
+        }
+      }
+      
+      // Panggil adjustHeight pertama kali
+      window.addEventListener('load', () => {
+        setTimeout(adjustHeight, 100);
+      });
+
+      // Event resize dengan debounce
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          goToPanel(currentIndex);
+        }, 250);
+      });
+      
+      // Ekspos fungsi untuk digunakan di tempat lain
+      window.adjustSliderHeight = adjustHeight;
+    })();
 
     // ========== NAVIGATION FUNCTIONS ==========
     function getOffset(level) {
       const isDesktop = window.innerWidth > 480;
-      if (level === 1) {
-        return isDesktop ? '-60px' : '-60px';
-      } else if (level === 2) {
-        return isDesktop ? '-180px' : '-220px';
-      }
+      if (level === 1) return isDesktop ? '-60px' : '-60px';
+      if (level === 2) return isDesktop ? '-180px' : '-220px';
     }
     
-    // Auto-hide logic for nav toggle button
     let autoHideTimer;
-    const AUTO_HIDE_DELAY = 1500; // 1.5 seconds
+    const AUTO_HIDE_DELAY = 1500;
 
     function resetAutoHideTimer() {
-      // --- MODIFICATION: Check for the correct visibility modes ---
       if (tempSettings.navButtonVisibility !== 'auto-hide') return;
-      
       clearTimeout(autoHideTimer);
       elements.navToggle.classList.remove('auto-hide');
-      
       setTimeout(startAutoHideTimer, 50);
     }
 
     function startAutoHideTimer() {
-      // --- MODIFICATION: Check for the correct visibility modes ---
       if (tempSettings.navButtonVisibility !== 'auto-hide') return;
-      
       clearTimeout(autoHideTimer);
       
       if (!elements.navBar.classList.contains('active') && 
@@ -2270,7 +2641,6 @@ body {
       elements.navToggle.querySelector('i').className = 'fas fa-bars';
       resetMoreIcon();
       
-      // --- MODIFICATION: Apply always-hidden class if needed ---
       if (tempSettings.navButtonVisibility === 'hidden') {
         elements.navToggle.classList.add('always-hidden');
       }
@@ -2278,10 +2648,7 @@ body {
 
     // ========== EVENT HANDLERS ==========
     function handleNavToggleClick() {
-      // Always reset the timer and button state on click
       resetAutoHideTimer();
-      
-      // Remove always-hidden class when clicked
       elements.navToggle.classList.remove('always-hidden');
       
       elements.navToggle.classList.toggle('active');
@@ -2296,7 +2663,6 @@ body {
         elements.navBar.classList.remove('expanded');
         resetMoreIcon();
         
-        // Apply always-hidden class if needed
         if (tempSettings.navButtonVisibility === 'hidden') {
           setTimeout(() => {
             elements.navToggle.classList.add('always-hidden');
@@ -2368,7 +2734,6 @@ body {
       updateModalUI(tempSettings);
     }
     
-    // --- MODIFICATION: New handler for nav visibility radios ---
     function handleNavVisibilityClick() {
         tempSettings.navButtonVisibility = this.dataset.value;
         updateModalUI(tempSettings);
@@ -2381,11 +2746,7 @@ body {
       const text = 'Check out Vyrina\'s creative portfolio!';
 
       if (this.classList.contains('copy')) {
-          navigator.clipboard.writeText(url).then(() => {
-              showNotification('Link copied successfully!');
-          }).catch(err => {
-              console.error('Failed to copy: ', err);
-          });
+          navigator.clipboard.writeText(url).then(() => showNotification('Link copied successfully!')).catch(err => console.error('Failed to copy: ', err));
       } else if (this.id === 'shareTwitter') {
           window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
       } else if (this.id === 'shareLinkedIn') {
@@ -2395,11 +2756,7 @@ body {
       } else if (this.id === 'shareTelegram') {
           window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
       } else if (this.id === 'shareNative' && navigator.share) {
-          navigator.share({
-              title: title,
-              text: text,
-              url: url,
-          }).catch(console.error);
+          navigator.share({ title: title, text: text, url: url, }).catch(console.error);
       }
       
       elements.shareModal.classList.remove('active');
@@ -2415,14 +2772,10 @@ body {
       a.remove(); URL.revokeObjectURL(url);
     }
     
-    // ========== EMAILJS FORM SUBMISSION ==========
     function handleContactFormSubmit(e) {
         e.preventDefault();
-
-        // --- PENTING: Ganti dengan Service ID dan Template ID Anda dari EmailJS ---
         const serviceID = 'service_bcpqy4k';
         const templateID = 'template_4v8yd3a';
-        // --------------------------------------------------------------------
 
         const submitBtn = elements.submitBtn;
         const originalBtnHTML = submitBtn.innerHTML;
@@ -2501,7 +2854,6 @@ body {
         option.addEventListener('click', handleThemeOptionClick);
       });
       
-      // --- MODIFICATION: Add listeners for new radio buttons ---
       elements.navVisibilityOptions.forEach(option => {
         option.addEventListener('click', handleNavVisibilityClick);
       });
@@ -2518,7 +2870,6 @@ body {
           animationsEnabled: true,
           backgroundTheme: 'aurora',
           performanceMode: false,
-          // --- MODIFICATION: Update reset default ---
           navButtonVisibility: 'auto-hide'
         };
         tempSettings = {...defaultSettings};
@@ -2562,6 +2913,11 @@ body {
         } else {
           elements.navToggle.style.transform = 'translate(-50%, 0)';
         }
+        
+        // Panggil fungsi adjustHeight saat resize
+        if (window.adjustSliderHeight) {
+          setTimeout(window.adjustSliderHeight, 100);
+        }
       });
       
       elements.contactForm.addEventListener('submit', handleContactFormSubmit);
@@ -2574,9 +2930,17 @@ body {
       loadSettings();
       setupEventListeners();
       startAutoHideTimer();
+      
+      // Panggil adjustHeight setelah semua konten dimuat
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          if (window.adjustSliderHeight) {
+            window.adjustSliderHeight();
+          }
+        }, 300);
+      });
     }
 
-    // Start everything
     init();
   </script>
 </body>
